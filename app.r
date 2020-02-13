@@ -21,7 +21,8 @@ ui<- dashboardPage(skin = "black",
     tabItems(
       tabItem(
         tabName = "map",
-        fillPage(tmapOutput(outputId = "map_1"))
+        fillPage(
+          tmapOutput(outputId = "map_1"))
         )
       )
     )
