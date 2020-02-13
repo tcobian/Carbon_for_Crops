@@ -18,19 +18,15 @@ ui<- dashboardPage(skin = "black",
       menuItem("Sources of GHG's", tabName = "ghg")
   )),
   dashboardBody(
-    tabItem(
+    tabItems(
       tabItem(
         tabName = "map",
-        fluidPage(
-          box(
-            title = "Potential for Regenratives Within Supply Chain",
-            tmapOutput(outputId = "map")
-          )
+        fillPage(tmapOutput(outputId = "map_1"))
         )
       )
     )
   )
-)
+
 
 
 
@@ -38,17 +34,10 @@ ui<- dashboardPage(skin = "black",
 
 server<- function(input, output){
   
-  output$map<- renderTmap({
-    tm_basemap("CartoDB.DarkMatter")
-    tmap_mode("view")
-    })
+  output$map_1<- renderTmap(tm_basemap("CartoDB.DarkMatter"))
   
 }
-
-
-
-
-
+  
 
 
 
