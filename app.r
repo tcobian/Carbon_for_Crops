@@ -4,6 +4,7 @@ library(shinydashboard)
 library(shinythemes)
 library(tmap)
 library(sf)
+library(leaflet)
 
 
 
@@ -22,7 +23,7 @@ ui<- dashboardPage(skin = "black",
       tabItem(
         tabName = "map",
         fillPage(
-          tmapOutput(outputId = "map_1"))
+          leafletOutput(outputId = "map_1"))
         )
       )
     )
@@ -52,9 +53,10 @@ server<- function(input, output){
   map_data_sf<- st_as_sf(map_data, coords = c("lon", "lat"))
   
   
-  output$map_1<- renderTmap(tm_basemap("CartoDB.DarkMatter")+
-                              tm_shape(map_data_sf)+
-                              tm_dots(label = "id", col = "id", size = 0.1))
+  output$map_1<- renderLeaflet(leaflet(map_data) %>% 
+                                 addProviderTiles("CartoDB.DarkMatter") %>% 
+                                 addCircleMarkers(lng = ~lon, lat = ~lat, popup = ~id))  
+
   
 }
   
