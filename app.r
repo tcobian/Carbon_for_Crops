@@ -23,7 +23,7 @@ ui<- dashboardPage(skin = "black",
       tabItem(
         tabName = "map",
         fillPage(
-          leafletOutput(outputId = "map_1"))
+          leafletOutput(outputId = "map_1", height = 1000))
         )
       )
     )
@@ -55,7 +55,8 @@ server<- function(input, output){
   
   output$map_1<- renderLeaflet(leaflet(map_data) %>% 
                                  addProviderTiles("CartoDB.DarkMatter") %>% 
-                                 addCircleMarkers(lng = ~lon, lat = ~lat, popup = ~id))  
+                                 addCircleMarkers(lng = ~lon, lat = ~lat, popup = ~id) %>% 
+                                 setView(40, 6, 2))  
 
   
 }
