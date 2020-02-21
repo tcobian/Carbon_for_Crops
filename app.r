@@ -55,7 +55,7 @@ server<- function(input, output){
   
   output$map_1<- renderLeaflet(leaflet(map_data) %>% 
                                  addProviderTiles("CartoDB.DarkMatter") %>% 
-                                 addCircleMarkers(lng = ~lon, lat = ~lat, popup = ~id) %>% 
+                                 addMarkers(lng = ~lon, lat = ~lat, popup = ~id) %>% 
                                  setView(40, 6, 2))  
 
   
