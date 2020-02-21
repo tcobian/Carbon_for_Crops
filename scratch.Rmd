@@ -13,8 +13,12 @@ library(shinythemes)
 library(tmap)
 library(sf)
 library(leaflet)
+
+crops<- read_csv("Total_Crops.csv")
 ```
 
+
+Widget #1
 ```{r}
 map_data<- tribble(
     ~id, ~lon, ~lat,
