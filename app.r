@@ -133,6 +133,32 @@ grazing_sd_table<- kable(grazing_sd, caption = "Grazing: South Dakota") %>%
 grazing_sd_table
 
 
+grazing_regen_bz_table<- crops %>% 
+  filter(Crop == "Bison") %>% 
+  filter(Country == "Brazil") %>%
+  filter(Practice == "Regenerative") %>% 
+  summarise(mean_regen_soc = mean(dSOC),
+            mean_regen_gwp = mean(GWP))
+
+grazing_organic_bz_table<- crops %>% 
+  filter(Crop == "Bison") %>% 
+  filter(Country == "Brazil") %>%
+  filter(Practice == "Organic") %>% 
+  summarise(mean_regen_soc = mean(dSOC),
+            mean_regen_gwp = mean(GWP))
+
+grazing_bz<- bind_rows(grazing_regen_bz_table, grazing_organic_bz_table)
+colnames(grazing_bz)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e")
+rownames(grazing_bz)<- c("Regenerative ", "Organic")
+
+grazing_bz_table<- kable(grazing_bz, caption = "Grazing: Brazil") %>% 
+  kable_styling(bootstrap_options = "striped")
+grazing_bz_table
+
+##############
+# Mangos
+
+
 
 ui<- dashboardPage(skin = "black",
   dashboardHeader(title = "Carbon for Crops"),
@@ -207,6 +233,12 @@ server<- function(input, output){
                                  addCircleMarkers(lng = -103.2310, 
                                                   lat = 44.0805, 
                                                   popup = grazing_sd_table, 
+                                                  stroke = FALSE, 
+                                                  fillColor = "blue", 
+                                                  fillOpacity = 0.3) %>%
+                                 addCircleMarkers(lng = -56.9211, 
+                                                  lat = -12.6819, 
+                                                  popup = grazing_bz_table, 
                                                   stroke = FALSE, 
                                                   fillColor = "blue", 
                                                   fillOpacity = 0.3) %>%
