@@ -8,6 +8,9 @@ library(sf)
 library(leaflet)
 
 
+#######
+# Working Space
+#######
 crops<- read_csv("Total_Crops.csv")
 
 ####################################################
@@ -180,6 +183,78 @@ mango_nic_table<- kable(grazing_sd, caption = "Mangos: Nicaragua") %>%
 mango_nic_table
 
 
+mango_regen_india_table<- crops %>% 
+  filter(Crop == "Mango") %>% 
+  filter(Country == "India") %>%
+  filter(Practice == "Regenerative") %>% 
+  summarise(mean_regen_soc = mean(dSOC),
+            mean_regen_gwp = mean(GWP))
+
+mango_organic_india_table<- crops %>% 
+  filter(Crop == "Mango") %>% 
+  filter(Country == "India") %>%
+  filter(Practice == "Organic") %>% 
+  summarise(mean_regen_soc = mean(dSOC),
+            mean_regen_gwp = mean(GWP))
+
+mango_india<- bind_rows(mango_regen_india_table, mango_organic_india_table)
+colnames(mango_india)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e")
+rownames(mango_india)<- c("Regenerative ", "Organic")
+
+mango_india_table<- kable(grazing_sd, caption = "Mangos: India") %>% 
+  kable_styling(bootstrap_options = "striped")
+mango_india_table
+
+
+######
+#Kernza
+######
+kernza_regen_min_table<- crops %>% 
+  filter(Crop == "Kernza") %>% 
+  filter(Country == "Minnesota") %>%
+  filter(Practice == "Regenerative") %>% 
+  summarise(mean_regen_soc = mean(dSOC),
+            mean_regen_gwp = mean(GWP))
+
+kernza_organic_min_table<- crops %>% 
+  filter(Crop == "Kernza") %>% 
+  filter(Country == "Minnesota") %>%
+  filter(Practice == "Organic") %>% 
+  summarise(mean_regen_soc = mean(dSOC),
+            mean_regen_gwp = mean(GWP))
+
+kernza_min<- bind_rows(kernza_regen_min_table, kernza_organic_min_table)
+colnames(kernza_min)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e")
+rownames(kernza_min)<- c("Regenerative ", "Organic")
+
+kernza_min_table<- kable(kernza_min, caption = "Kernza: Minnesota") %>% 
+  kable_styling(bootstrap_options = "striped")
+kernza_min_table
+
+
+kernza_regen_ks_table<- crops %>% 
+  filter(Crop == "Kernza") %>% 
+  filter(Country == "Kansas") %>%
+  filter(Practice == "Regenerative") %>% 
+  summarise(mean_regen_soc = mean(dSOC),
+            mean_regen_gwp = mean(GWP))
+
+kernza_organic_ks_table<- crops %>% 
+  filter(Crop == "Kernza") %>% 
+  filter(Country == "Kansas") %>%
+  filter(Practice == "Organic") %>% 
+  summarise(mean_regen_soc = mean(dSOC),
+            mean_regen_gwp = mean(GWP))
+
+kernza_ks<- bind_rows(kernza_regen_ks_table, kernza_organic_ks_table)
+colnames(kernza_ks)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e")
+rownames(kernza_ks)<- c("Regenerative ", "Organic")
+
+kernza_ks_table<- kable(kernza_min, caption = "Kernza: Kansas") %>% 
+  kable_styling(bootstrap_options = "striped")
+kernza_ks_table
+
+
 ui<- dashboardPage(skin = "black",
   dashboardHeader(title = "Carbon for Crops"),
   dashboardSidebar(
@@ -206,6 +281,9 @@ ui<- dashboardPage(skin = "black",
 
 
 server<- function(input, output){
+  #####################################################################
+  # Widget #1: Map
+  #####################################################################
   
   map_data<- tribble(
     ~id, ~lon, ~lat,
@@ -222,7 +300,6 @@ server<- function(input, output){
   )
 
   map_data_sf<- st_as_sf(map_data, coords = c("lon", "lat"))
-  
   
   output$map_1<- renderLeaflet(leaflet(map_data) %>% 
                                  addProviderTiles("CartoDB.DarkMatter") %>% 
@@ -268,8 +345,28 @@ server<- function(input, output){
                                                   stroke = FALSE, 
                                                   fillColor = "green", 
                                                   fillOpacity = 0.3) %>%
+                                 addCircleMarkers(lng = 72.8777, 
+                                                  lat = 19.0760, 
+                                                  popup = mango_india_table, 
+                                                  stroke = FALSE, 
+                                                  fillColor = "green", 
+                                                  fillOpacity = 0.3) %>%
+                                 addCircleMarkers(lng = -94.6859, 
+                                                  lat = 46.7296, 
+                                                  popup = kernza_min_table, 
+                                                  stroke = FALSE, 
+                                                  fillColor = "orange", 
+                                                  fillOpacity = 0.3) %>%
+                                 addCircleMarkers(lng = -98.4842, 
+                                                  lat = 39.0119, 
+                                                  popup = kernza_ks_table, 
+                                                  stroke = FALSE, 
+                                                  fillColor = "orange", 
+                                                  fillOpacity = 0.3) %>%
                                  setView(40, 6, 2))  
-
+  #####################################################################
+  #####################################################################
+  
   
 }
   
