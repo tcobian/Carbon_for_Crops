@@ -157,7 +157,27 @@ grazing_bz_table
 
 ##############
 # Mangos
+mango_regen_nic_table<- crops %>% 
+  filter(Crop == "Mango") %>% 
+  filter(Country == "Nicaragua") %>%
+  filter(Practice == "Regenerative") %>% 
+  summarise(mean_regen_soc = mean(dSOC),
+            mean_regen_gwp = mean(GWP))
 
+mango_organic_nic_table<- crops %>% 
+  filter(Crop == "Mango") %>% 
+  filter(Country == "Nicaragua") %>%
+  filter(Practice == "Organic") %>% 
+  summarise(mean_regen_soc = mean(dSOC),
+            mean_regen_gwp = mean(GWP))
+
+mango_nic<- bind_rows(mango_regen_nic_table, mango_organic_nic_table)
+colnames(mango_nic)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e")
+rownames(mango_nic)<- c("Regenerative ", "Organic")
+
+mango_nic_table<- kable(grazing_sd, caption = "Mangos: Nicaragua") %>% 
+  kable_styling(bootstrap_options = "striped")
+mango_nic_table
 
 
 ui<- dashboardPage(skin = "black",
@@ -241,6 +261,12 @@ server<- function(input, output){
                                                   popup = grazing_bz_table, 
                                                   stroke = FALSE, 
                                                   fillColor = "blue", 
+                                                  fillOpacity = 0.3) %>%
+                                 addCircleMarkers(lng = -85.2072, 
+                                                  lat = 12.8654, 
+                                                  popup = mango_nic_table, 
+                                                  stroke = FALSE, 
+                                                  fillColor = "green", 
                                                   fillOpacity = 0.3) %>%
                                  setView(40, 6, 2))  
 
