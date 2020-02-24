@@ -255,6 +255,29 @@ kernza_ks_table<- kable(kernza_min, caption = "Kernza: Kansas") %>%
 kernza_ks_table
 
 
+kernza_regen_scotland_table<- crops %>% 
+  filter(Crop == "Kernza") %>% 
+  filter(Country == "Scotland") %>%
+  filter(Practice == "Regenerative") %>% 
+  summarise(mean_regen_soc = mean(dSOC),
+            mean_regen_gwp = mean(GWP))
+
+kernza_organic_scotland_table<- crops %>% 
+  filter(Crop == "Kernza") %>% 
+  filter(Country == "Scotland") %>%
+  filter(Practice == "Organic") %>% 
+  summarise(mean_regen_soc = mean(dSOC),
+            mean_regen_gwp = mean(GWP))
+
+kernza_scotland<- bind_rows(kernza_regen_scotland_table, kernza_organic_scotland_table)
+colnames(kernza_scotland)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e")
+rownames(kernza_scotland)<- c("Regenerative ", "Organic")
+
+kernza_scotland_table<- kable(kernza_scotland, caption = "Kernza: Scotland") %>% 
+  kable_styling(bootstrap_options = "striped")
+kernza_scotland_table
+
+
 ui<- dashboardPage(skin = "black",
   dashboardHeader(title = "Carbon for Crops"),
   dashboardSidebar(
@@ -296,7 +319,8 @@ server<- function(input, output){
     "Mango", 72.8777, 19.0760,
     "Mango", -85.2072, 12.8654,
     "Kernza", -94.6859, 46.7296,
-    "Kernza", -98.4842, 39.0119
+    "Kernza", -98.4842, 39.0119,
+    "Kernza", -4.5919, 55.6765
   )
 
   map_data_sf<- st_as_sf(map_data, coords = c("lon", "lat"))
@@ -360,6 +384,12 @@ server<- function(input, output){
                                  addCircleMarkers(lng = -98.4842, 
                                                   lat = 39.0119, 
                                                   popup = kernza_ks_table, 
+                                                  stroke = FALSE, 
+                                                  fillColor = "orange", 
+                                                  fillOpacity = 0.3) %>%
+                                 addCircleMarkers(lng = -4.5919, 
+                                                  lat = 55.6765, 
+                                                  popup = kernza_scotland_table, 
                                                   stroke = FALSE, 
                                                   fillColor = "orange", 
                                                   fillOpacity = 0.3) %>%
