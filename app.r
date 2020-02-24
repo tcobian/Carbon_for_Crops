@@ -108,6 +108,31 @@ cotton_peru_table<- kable(cotton_peru, caption = "Cotton: Peru") %>%
 cotton_peru_table
 
 
+########
+# grazing
+grazing_regen_sd_table<- crops %>% 
+  filter(Crop == "Bison") %>% 
+  filter(Country == "South Dakota") %>%
+  filter(Practice == "Regenerative") %>% 
+  summarise(mean_regen_soc = mean(dSOC),
+            mean_regen_gwp = mean(GWP))
+
+grazing_organic_sd_table<- crops %>% 
+  filter(Crop == "Bison") %>% 
+  filter(Country == "South Dokota") %>%
+  filter(Practice == "Organic") %>% 
+  summarise(mean_regen_soc = mean(dSOC),
+            mean_regen_gwp = mean(GWP))
+
+grazing_sd<- bind_rows(grazing_regen_sd_table, grazing_organic_sd_table)
+colnames(grazing_sd)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e")
+rownames(grazing_sd)<- c("Regenerative ", "Organic")
+
+grazing_sd_table<- kable(grazing_sd, caption = "Grazing: South Dakota") %>% 
+  kable_styling(bootstrap_options = "striped")
+grazing_sd_table
+
+
 
 ui<- dashboardPage(skin = "black",
   dashboardHeader(title = "Carbon for Crops"),
@@ -179,6 +204,12 @@ server<- function(input, output){
                                                   stroke = FALSE, 
                                                   fillColor = "red", 
                                                   fillOpacity = 0.3) %>% 
+                                 addCircleMarkers(lng = -103.2310, 
+                                                  lat = 44.0805, 
+                                                  popup = grazing_sd_table, 
+                                                  stroke = FALSE, 
+                                                  fillColor = "blue", 
+                                                  fillOpacity = 0.3) %>%
                                  setView(40, 6, 2))  
 
   
