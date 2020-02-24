@@ -122,7 +122,7 @@ grazing_regen_sd_table<- crops %>%
 
 grazing_organic_sd_table<- crops %>% 
   filter(Crop == "Bison") %>% 
-  filter(Country == "South Dokota") %>%
+  filter(Country == "South Dakota") %>%
   filter(Practice == "Organic") %>% 
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
@@ -393,6 +393,7 @@ server<- function(input, output){
                                                   stroke = FALSE, 
                                                   fillColor = "orange", 
                                                   fillOpacity = 0.3) %>%
+                                 addLegend(position = "topright", colors = c("red", "blue", "green", "orange"), labels = c("Cotton", "Grazing", "Mango", "Kernza")) %>% 
                                  setView(40, 6, 2))  
   #####################################################################
   #####################################################################
