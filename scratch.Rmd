@@ -7,6 +7,11 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(kableExtra)
+library(tidyverse)
 library(shiny)
 library(shinydashboard)
 library(shinythemes)
@@ -14,7 +19,12 @@ library(tmap)
 library(sf)
 library(leaflet)
 
+
 crops<- read_csv("Total_Crops.csv")
+```
+
+```{r}
+
 ```
 
 
@@ -39,7 +49,45 @@ map_data<- tribble(
   
 map_1<- leaflet(map_data) %>% 
   addProviderTiles("CartoDB.DarkMatter") %>% 
-  addCircleMarkers(lng =~lon, lat =~lat, popup = ~id)
+  addCircleMarkers(lng =~lon, lat =~lat, popup = ~id, color = 'red')
 map_1
 ```
+
+Tables for map
+```{r}
+cotton_regen_table<- crops %>% 
+  filter(Crop == "Cotton") %>% 
+  filter(Country == "India") %>%
+  filter(Practice == "Regenerativeerative") %>% 
+  summarise(mean_regen_soc = mean(dSOC),
+            mean_regen_gwp = mean(GWP))
+
+cotton_organic_table<- crops %>% 
+  filter(Crop == "Cotton") %>% 
+  filter(Country == "India") %>%
+  filter(Practice == "Organic") %>% 
+  summarise(mean_regen_soc = mean(dSOC),
+            mean_regen_gwp = mean(GWP))
+
+cotton_india<- bind_rows(cotton_regen_table, cotton_organic_table)
+colnames(cotton_india)<- c("Average kgSOC", "Average kgCO2e")
+rownames(cotton_india)<- c("Regenerative ", "Organic")
+
+cotton_table<- kable(cotton_india) %>% 
+  kable_styling(bootstrap_options = "striped")
+cotton_table
+
+
+
+
+```
+
+
+
+
+
+
+
+
+
 
