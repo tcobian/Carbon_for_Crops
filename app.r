@@ -327,7 +327,7 @@ ui<- dashboardPage(skin = "black",
         sidebarPanel(title = "Inputs",
                      radioButtons(inputId = "Crop",
                                   label = "Select Crop",
-                                  choices = c(unique(crops_filter$Crop)))
+                                  choices = c("Cotton", "Mango", "Kernza", "Grazing")
         )
       )
     )
