@@ -198,6 +198,47 @@ crops_filter<- bind_rows(kernza, cotton, mango, grazing)
   
 ```
 
+Mango Bar location plot
+```{r}
+mango_location<- data.frame(Location = c("India", "India","Nicaragua", "Nicaragua"),
+                             Practice = c("Regenerative", "Organic","Regenerative", "Organic"),
+                             SOC = c(mango_india_regen_soc, mango_india_organic_soc, mango_nicaragua_regen_soc, mango_nicaragua_organic_soc),
+                           GWP = c(mango_india_regen_gwp, mango_india_organic_gwp, mango_nicaragua_regen_gwp, mango_nicaragua_organic_gwp))
+
+# make the plots
+
+mango_location_soc_plot<- ggplot(mango_location, aes(y = SOC, x = Location, fill = Practice))+
+  geom_bar(stat = "identity", position = "dodge", width = 0.5)+
+  scale_fill_manual(values = c("darkorange4", "darkorange"))+
+  labs(title = "MANGO", y = "kgSOC/ha", x = element_blank())+
+  geom_hline(yintercept = 0)+
+  theme_classic()+
+  theme(plot.title = element_text(hjust = 0.5, size = 30), axis.text.x = element_text(size = 20), axis.text.y = element_text(size = 20), axis.title.x = element_text(size = 20), axis.title.y = element_text(size = 20), legend.text = element_text(size = 25), legend.title = element_text(size = 25))
+mango_location_soc_plot
+
+mango_location_gwp_plot<- ggplot(mango_location, aes(y = GWP, x = Location, fill = Practice))+
+  geom_bar(stat = "identity", position = "dodge", width = 0.5)+
+  scale_fill_manual(values = c("darkorange4", "darkorange"))+
+  geom_hline(yintercept = 0)+
+  labs(title = "MANGO", y = "kgCO2e/ha", x = element_blank())+
+  theme_classic()+
+  theme(plot.title = element_text(hjust = 0.5, size = 30), axis.text.x = element_text(size = 20), axis.text.y = element_text(size = 20), axis.title.x = element_text(size = 20), axis.title.y = element_text(size = 20), legend.text = element_text(size = 25), legend.title = element_text(size = 25))
+mango_location_gwp_plot
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
