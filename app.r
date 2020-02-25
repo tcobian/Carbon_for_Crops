@@ -306,7 +306,7 @@ ui<- dashboardPage(skin = "black",
   dashboardHeader(title = "Carbon for Crops"),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Regenratives Globally", tabName = "map"),
+      menuItem("Regeneratives Globally", tabName = "map"),
       menuItem("Soil Organic Carbon & GWP", tabName = "overview"),
       menuItem("Practices", tabName = "sensativity"),
       menuItem("Sources of GHG's", tabName = "ghg")
