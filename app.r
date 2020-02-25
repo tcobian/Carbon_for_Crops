@@ -278,6 +278,30 @@ kernza_scotland_table<- kable(kernza_scotland, caption = "Kernza: Scotland") %>%
 kernza_scotland_table
 
 
+
+####################################
+# Breakdown of GHG tab work
+####################################
+kernza<- crops %>% 
+  filter(Crop == "Kernza")
+
+cotton<- crops %>% 
+  filter(Crop == "Cotton") %>% 
+  filter(Practice == "Regenerativeerative" | 
+           Practice == "Organic")
+
+mango<- crops %>% 
+  filter(Crop == "Mango")
+
+grazing<- crops %>% 
+  filter(Crop == "Bison")
+
+crops_filter<- bind_rows(kernza, cotton, mango, grazing)
+
+#####################################
+
+
+
 ui<- dashboardPage(skin = "black",
   dashboardHeader(title = "Carbon for Crops"),
   dashboardSidebar(
@@ -295,8 +319,21 @@ ui<- dashboardPage(skin = "black",
           leafletOutput(outputId = "map_1", height = 1000))
         )
       )
+    ),
+  dashboardSidebar(
+    tabItems(
+      tabItem(
+        tabName = "ghg",
+        sidebarPanel(title = "Inputs",
+                     radioButtons(inputId = "Crop",
+                                  label = "Select Crop",
+                                  choices = c(unique(crops_filter$Crop))),
+        mainPanel("Average Yearly GHGs (kgCO2e)")
+        )
+      )
     )
-  )
+  ))
+  
 
 
 
@@ -397,6 +434,24 @@ server<- function(input, output){
                                  setView(40, 6, 2))  
   #####################################################################
   #####################################################################
+  
+  
+  
+  #########################
+  # Input for widget #4 GHG breakdown
+  ##########################
+  
+  # crop selection input for GHG break
+  crop_select<- reactive({
+    crops_filter %>% 
+      filter(Crop == input$Crop) %>% 
+      summarise(N2O = mean(N2O_CO2e),
+                CH4 = mean(CH4_CO2e),
+                CO2 = mean(CO2e))
+  })
+  
+  
+  # vizual for ghg break
   
   
 }

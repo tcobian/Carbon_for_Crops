@@ -5,16 +5,13 @@ date: "2/15/2020"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 
 
 ```{r}
 library(kableExtra)
 library(tidyverse)
 library(shiny)
+library(ggpubr)
 library(shinydashboard)
 library(shinythemes)
 library(tmap)
@@ -80,8 +77,126 @@ cotton_table
 
 
 
+Graph for the breakdown of GHGs
+```{r}
+options(scipen = 999)
+# find the mean n2o and ch4 for regen and oragnic for each crop in the base site
+# base sites 
+# Kernza: Minnesota
+# Mango: Nicaragua
+# Cotton: Texas
+# Bison: Sputh Dakota
+kernza_regen_n2o<- sum(crops$N2O_CO2e[55:72])
+kernza_organic_n2o<- sum(crops$N2O_CO2e[37:54])
+kernza_regen_ch4<- sum(crops$CH4_CO2e[55:72])
+kernza_organic_ch4<- sum(crops$CH4_CO2e[37:54])
+kernza_regen_co2<- (sum(crops$CO2e[55:72]))
+kernza_organic_co2<- (sum(crops$CO2e[37:54]))
+
+mango_regen_n2o<- sum(crops$N2O_CO2e[639:656])
+mango_organic_n2o<- sum(crops$N2O_CO2e[657:674])
+mango_regen_ch4<- sum(crops$CH4_CO2e[639:656])
+mango_organic_ch4<- sum(crops$CH4_CO2e[657:674])
+mango_regen_co2<- sum(crops$CO2e[639:656])
+mango_organic_co2<- sum(crops$CO2e[657:674])
+
+cotton_regen_n2o<- sum(crops$N2O_CO2e[217:234])
+cotton_organic_n2o<- sum(crops$N2O_CO2e[145:162])
+cotton_regen_ch4<- sum(crops$CH4_CO2e[217:234])
+cotton_oragnic_ch4<- sum(crops$CH4_CO2e[145:162])
+cotton_regen_co2<- sum(crops$CO2e[217:234])
+cotton_organic_co2<- sum(crops$CO2e[145:162])
+
+bison_regen_n2o<- sum(crops$N2O_CO2e[585:602])
+bison_organic_n2o<- sum(crops$N2O_CO2e[567:584])
+bison_regen_ch4<- sum(crops$CH4_CO2e[585:602])
+bison_organic_ch4<- sum(crops$CH4_CO2e[567:584])
+bison_regen_co2<- sum(crops$CO2e[585:602])
+bison_organic_co2<- sum(crops$CO2e[567:584])
+
+# make a data set of these averages
+
+n2o_ch4_co2<- data.frame(Crop = c("Kernza", "Kernza", "Kernza", "Kernza","Kernza", "Kernza", "Mango", "Mango","Mango", "Mango","Mango", "Mango","Cotton", "Cotton", "Cotton", "Cotton", "Cotton", "Cotton","Bison", "Bison", "Bison", "Bison", "Bison", "Bison"),
+                   Practice = c("Regenerative", "Organic", "Regenerative", "Organic", "Regenerative", "Organic", "Regenerative", "Organic"),
+                   Gas = c("N2O", "N2O", "CH4", "CH4","CO2","CO2", "N2O", "N2O", "CH4", "CH4","CO2","CO2","N2O", "N2O", "CH4", "CH4","CO2","CO2", "N2O", "N2O", "CH4", "CH4", "CO2","CO2"),
+                   kg_co2e = c(kernza_regen_n2o, kernza_organic_n2o, kernza_regen_ch4, kernza_organic_ch4, kernza_regen_co2, kernza_organic_co2, mango_regen_n2o, mango_organic_n2o, mango_regen_ch4, mango_organic_ch4, mango_regen_co2, mango_organic_co2, cotton_regen_n2o, cotton_organic_n2o, cotton_regen_ch4, cotton_oragnic_ch4, cotton_regen_co2, cotton_organic_co2, bison_regen_n2o, bison_organic_n2o, bison_regen_ch4, bison_organic_ch4, bison_regen_co2, bison_organic_co2))
+
+ch4_n20_kernza<- n2o_ch4_co2 %>% 
+  filter(Crop == "Kernza") %>% 
+  group_by(Practice)
+
+ch4_n20_cotton<- n2o_ch4_co2 %>% 
+  filter(Crop == "Cotton") %>% 
+  group_by(Practice)
+
+ch4_n20_mango<- n2o_ch4_co2 %>% 
+  filter(Crop == "Mango") %>% 
+  group_by(Practice)
+
+ch4_n20_bison<- n2o_ch4_co2 %>% 
+  filter(Crop == "Bison") %>% 
+  group_by(Practice)
+
+ch4_n20_kernza_plot<- ggplot(ch4_n20_kernza, aes(y = kg_co2e, x = Gas, fill = Gas))+
+  geom_bar(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
+  facet_wrap(~Practice)+
+  scale_fill_manual(values = c("darkolivegreen", "darkolivegreen3", "darkolivegreen1"))+
+  geom_hline(yintercept = 0)+
+  labs(title = "KERNZA", y = "kgCO2e/ha", x = element_blank())+
+  theme_classic()+
+  theme(plot.title = element_text(hjust = 0.5, size = 30), axis.text.x = element_text(size = 20), axis.text.y = element_text(size = 20), axis.title.x = element_text(size = 20), strip.text = element_text(size = 20), axis.title.y = element_text(size = 20))
+ch4_n20_kernza_plot
+
+ch4_n20_cotton_plot<- ggplot(ch4_n20_cotton, aes(y = kg_co2e, x = Gas, fill = Gas))+
+  geom_bar(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
+  facet_wrap(~Practice)+
+  scale_fill_manual(values = c("deepskyblue", "deepskyblue3", "deepskyblue4"))+
+  labs(title = "COTTON", y = element_blank(), x = element_blank())+
+  theme_classic()+
+  theme(plot.title = element_text(hjust = 0.5, size = 30), axis.text.x = element_text(size = 20), axis.text.y = element_text(size = 20), strip.text = element_text(size = 20))
+ch4_n20_cotton_plot
+
+ch4_n20_mango_plot<- ggplot(ch4_n20_mango, aes(y = kg_co2e, x = Gas, fill = Gas))+
+  geom_bar(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
+  facet_wrap(~Practice)+
+  scale_fill_manual(values = c("darkorange", "darkorange3", "darkorange4"))+
+  labs(title = "MANGO", y = "kgCO2e/ha", x = element_blank())+
+  theme_classic()+
+  theme(plot.title = element_text(hjust = 0.5, size = 30), axis.text.x = element_text(size = 20), axis.text.y = element_text(size = 20), axis.title.x = element_text(size = 20), strip.text = element_text(size = 20), axis.title.y = element_text(size = 20))
+ch4_n20_mango_plot
+
+ch4_n20_bison_plot<- ggplot(ch4_n20_bison, aes(y = kg_co2e, x = Gas, fill = Gas))+
+  geom_bar(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
+  facet_wrap(~Practice)+
+  scale_fill_manual(values = c("darkslategray", "darkseagreen3", "darkseagreen4"))+
+  labs(title = "GRAZING", y = element_blank(), x = element_blank())+
+  theme_classic()+
+  theme(plot.title = element_text(hjust = 0.5, size = 30), axis.text.x = element_text(size = 20), axis.text.y = element_text(size = 20), strip.text = element_text(size = 20))
+ch4_n20_bison_plot
+
+ggarrange(ch4_n20_kernza_plot, ch4_n20_cotton_plot, ch4_n20_mango_plot, ch4_n20_bison_plot)
+```
 
 
+Second try for GHG plots
+```{r}
+kernza<- crops %>% 
+  filter(Crop == "Kernza")
+
+cotton<- crops %>% 
+  filter(Crop == "Cotton") %>% 
+  filter(Practice == "Regenerativeerative" | 
+         Practice == "Organic")
+
+mango<- crops %>% 
+  filter(Crop == "Mango")
+
+grazing<- crops %>% 
+  filter(Crop == "Bison")
+
+crops_filter<- bind_rows(kernza, cotton, mango, grazing)
+  
+```
 
 
 
