@@ -331,7 +331,7 @@ ui<- dashboardPage(skin = "black",
         )
       )
     )
-  ))
+  )))
   
 
 
