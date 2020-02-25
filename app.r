@@ -443,7 +443,7 @@ server<- function(input, output){
   # crop selection input for GHG break
   crop_select<- reactive({
     crops_filter %>% 
-      filter(Crop == Inputs$Crop) %>% 
+      filter(Crop == input$Crop) %>% 
       summarise(N2O = mean(N2O_CO2e),
                 CH4 = mean(CH4_CO2e),
                 CO2 = mean(CO2e))
