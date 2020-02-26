@@ -463,11 +463,10 @@ server<- function(input, output){
     theme_classic()+
     theme(plot.title = element_text(hjust = 0.5, size = 30), axis.text.x = element_text(size = 20), axis.text.y = element_text(size = 20), strip.text = element_text(size = 20))
   
-  
   })
   
   
-})
+}
   
 
 
