@@ -315,6 +315,9 @@ ui<- dashboardPage(skin = "black",
     tabItem(tabName = "map",
             fillPage(leafletOutput(outputId = "map_1", height = 1000)))
       ),
+  
+  
+  
   dashboardBody(
     tabItems(
       tabItem(
@@ -324,7 +327,7 @@ ui<- dashboardPage(skin = "black",
           radioButtons(inputId = "Crop",
                        label = "Select Crop",
                        choices = c("Cotton", "Mango", "Kernza", "Grazing")),
-        mainPanel("Results", plotOutput(outputId = "ghg_plot"))
+          mainPanel(plotOutput(outputId = "ghg_plot"))
           )
           )
         )
@@ -452,7 +455,7 @@ server<- function(input, output){
   
   # vizual for ghg break
   
-  Results$ghg_plot<- renderPlot({ 
+  output$ghg_plot<- renderPlot({ 
     
     ggplot(crop_select, aes(y = kg_co2e, x = Gas, fill = Gas))+
     geom_bar(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
