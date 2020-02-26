@@ -229,8 +229,54 @@ mango_location_gwp_plot
 
 
 
+```{r}
+mango_regen_nic = mango %>%
+  filter(Country == "Nicaragua") %>%
+  filter(Practice == "Regenerative")
+
+avg_soc_nic_r = mean(mango_regen_nic$dSOC)
+avg_ghg_nic_r = mean(mango_regen_nic$GWP)
 
 
+mango_org_nic = mango %>% 
+  filter(Country == "Nicaragua") %>% 
+  filter(Practice == "Organic")
+
+avg_soc_nic_o = mean(mango_org_nic$dSOC)
+avg_ghg_nic_o = mean(mango_org_nic$GWP)
+
+mango_regen_india = mango %>%
+  filter(Country == "India") %>%
+  filter(Practice == "Regenerative")
+
+mean(mango_regen_india$dSOC)
+mean(mango_regen_india$GWP)
+
+mango_org_india = mango %>% 
+  filter(Country == "India") %>% 
+  filter(Practice == "Organic")
+
+mean(mango_org_india$dSOC)
+mean(mango_org_india$GWP)
+
+```
+
+
+```{r}
+nic_mango = data.frame(Crop = c("Mango", "Mango"),
+           Practice = c("Regenerative", "Organic"),
+           Country = c("Nicaragua", "Nicaragua"),
+           mean_soc = c(avg_soc_nic_r, avg_soc_nic_o),
+           mean_ghg = c(avg_ghg_nic_r, avg_ghg_nic_o)
+)
+
+ggplot(data = nic_mango, aes(x = Practice, y = mean_soc))+
+  geom_col(aes(fill = Practice), width = 0.5)+
+  scale_fill_manual(values = c("darkorange4", "darkorange"))+
+  theme_classic()
+
+
+```
 
 
 
