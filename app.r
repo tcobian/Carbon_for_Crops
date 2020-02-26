@@ -13,6 +13,139 @@ library(leaflet)
 #######
 crops<- read_csv("Total_Crops.csv")
 
+
+
+
+cotton_regen_texas <- crops %>% 
+  filter(Country == "Texas",
+         Practice == "Regenerative",
+         Crop == "Cotton") %>% 
+  group_by(Practice)
+
+cotton_organic_texas <- crops%>% 
+  filter(Country == "Texas",
+         Practice == "Organic",
+         Crop == "Cotton") %>% 
+  group_by(Practice)
+
+
+cotton_regen_india <- crops %>% 
+  filter(Country == "India",
+         Practice == "Regenerative",
+         Crop == "Cotton") %>% 
+  group_by(Practice)
+
+cotton_organic_india <- crops %>% 
+  filter(Country == "India",
+         Practice == "Organic",
+         Crop == "Cotton") %>% 
+  group_by(Practice)
+
+
+cotton_regen_peru <- crops %>% 
+  filter(Country == "Peru",
+         Practice == "Regenerative",
+         Crop == "Cotton") %>% 
+  group_by(Practice)
+
+cotton_organic_peru <- crops %>% 
+  filter(Country == "Peru",
+         Practice == "Organic",
+         Crop == "Cotton") %>% 
+  group_by(Practice)
+
+cotton_regen_china <- crops%>% 
+  filter(Country == "China",
+         Practice == "Regenerative",
+         Crop == "Cotton") %>% 
+  group_by(Practice)
+
+cotton_organic_china <- crops %>% 
+  filter(Country == "China",
+         Practice == "Organic",
+         Crop == "Cotton") %>% 
+  group_by(Practice)
+
+kernza_regen_minnesota <- crops %>% 
+  filter(Country == "Minnesota",
+         Practice == "Regenerative",
+         Crop == "Kernza") %>% 
+  group_by(Practice)
+
+kernza_organic_minnesota <- crops %>% 
+  filter(Country == "Minnesota",
+         Practice == "Organic",
+         Crop == "Kernza") %>% 
+  group_by(Practice)
+
+
+kernza_regen_scotland <- crops %>% 
+  filter(Country == "Scotland",
+         Practice == "Regenerative",
+         Crop == "Kernza") %>% 
+  group_by(Practice)
+
+kernza_organic_scotland <- crops %>% 
+  filter(Country == "Scotland",
+         Practice == "Organic",
+         Crop == "Kernza") %>% 
+  group_by(Practice)
+
+kernza_regen_kansas <- crops %>% 
+  filter(Country == "Kansas",
+         Practice == "Regenerative",
+         Crop == "Kernza") %>% 
+  group_by(Practice)
+
+kernza_organic_kansas <- crops %>% 
+  filter(Country == "Kansas",
+         Practice == "Organic",
+         Crop == "Kernza") %>% 
+  group_by(Practice)
+
+mango_regen_nicaragua <- crops %>% 
+  filter(Country == "Nicaragua",
+         Practice == "Regenerative",
+         Crop == "Mango") 
+
+mango_organic_nicaragua <- crops %>% 
+  filter(Country == "Nicaragua",
+         Practice == "Organic",
+         Crop == "Mango") 
+
+mango_regen_india <- crops %>% 
+  filter(Country == "India",
+         Practice == "Regenerative",
+         Crop == "Mango") 
+
+mango_organic_india <- crops %>% 
+  filter(Country == "India",
+         Practice == "Organic",
+         Crop == "Mango")
+
+bison_regen_sd <- crops %>% 
+  filter(Country == "South Dakota",
+         Practice == "Regenerative",
+         Crop == "Bison") %>% 
+  group_by(Practice)
+
+bison_organic_sd <- crops%>% 
+  filter(Country == "South Dakota",
+         Practice == "Organic",
+         Crop == "Bison") %>% 
+  group_by(Practice)
+
+bison_regen_bz <- crops %>% 
+  filter(Country == "Brazil",
+         Practice == "Regenerative",
+         Crop == "Bison") %>% 
+  group_by(Practice)
+
+bison_organic_bz <- crops %>% 
+  filter(Country == "Brazil",
+         Practice == "Organic",
+         Crop == "Bison") %>% 
+  group_by(Practice)
 ####################################################
 # map markers
 ####################################################
@@ -22,7 +155,7 @@ crops<- read_csv("Total_Crops.csv")
 cotton_regen_texas_table<- crops %>% 
   filter(Crop == "Cotton") %>% 
   filter(Country == "Texas") %>%
-  filter(Practice == "Regenerativeerative") %>% 
+  filter(Practice == "Regenerative") %>% 
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
 
@@ -45,7 +178,7 @@ cotton_texas_table
 cotton_regen_india_table<- crops %>% 
   filter(Crop == "Cotton") %>% 
   filter(Country == "India") %>%
-  filter(Practice == "Regenerativeerative") %>% 
+  filter(Practice == "Regenerative") %>% 
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
 
@@ -68,7 +201,7 @@ cotton_india_table
 cotton_regen_china_table<- crops %>% 
   filter(Crop == "Cotton") %>% 
   filter(Country == "China") %>%
-  filter(Practice == "Regenerativeerative") %>% 
+  filter(Practice == "Regenerative") %>% 
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
 
@@ -91,7 +224,7 @@ cotton_china_table
 cotton_regen_peru_table<- crops %>% 
   filter(Crop == "Cotton") %>% 
   filter(Country == "Peru") %>%
-  filter(Practice == "Regenerativeerative") %>% 
+  filter(Practice == "Regenerative") %>% 
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
 
@@ -277,7 +410,56 @@ kernza_scotland_table<- kable(kernza_scotland, caption = "Kernza: Scotland") %>%
   kable_styling(bootstrap_options = "striped")
 kernza_scotland_table
 
+############################################################################
+kernza_regen_n2o<- sum(kernza_regen_minnesota$N2O_CO2e)
+kernza_organic_n2o<- sum(kernza_organic_minnesota$N2O_CO2e)
 
+kernza_regen_ch4<- sum(kernza_regen_minnesota$CH4_CO2e)
+kernza_organic_ch4<- sum(kernza_organic_minnesota$CH4_CO2e)
+
+kernza_regen_co2<- sum(kernza_regen_minnesota$CO2e)
+kernza_organic_co2<- sum(kernza_organic_minnesota$CO2e)
+
+########################################
+mango_regen_n2o<- sum(mango_regen_nicaragua$N2O_CO2e)
+mango_organic_n2o<- sum(mango_organic_nicaragua$N2O_CO2e)
+
+mango_regen_ch4<- sum(mango_regen_nicaragua$CH4_CO2e)
+mango_organic_ch4<- sum(mango_organic_nicaragua$CH4_CO2e)
+
+mango_regen_co2<- sum(mango_regen_nicaragua$CO2e)
+mango_organic_co2<- sum(mango_organic_nicaragua$CO2e)
+
+######################################################
+cotton_regen_n2o<- sum(cotton_regen_texas$N2O_CO2e)
+cotton_organic_n2o<- sum(cotton_organic_texas$N2O_CO2e)
+
+cotton_regen_ch4<- sum(cotton_regen_texas$CH4_CO2e)
+cotton_oragnic_ch4<- sum(cotton_organic_texas$CH4_CO2e)
+
+cotton_regen_co2<- sum(cotton_regen_texas$CO2e)
+cotton_organic_co2<- sum(cotton_organic_texas$CO2e)
+
+
+####################################################
+bison_regen_n2o<- sum(bison_regen_sd$N2O_CO2e)
+bison_organic_n2o<- sum(bison_organic_sd$N2O_CO2e)
+
+bison_regen_ch4<- sum(bison_regen_sd$CH4_CO2e)
+bison_organic_ch4<- sum(bison_organic_sd$CH4_CO2e)
+
+bison_regen_co2<- sum(bison_regen_sd$CO2e)
+bison_organic_co2<- sum(bison_organic_sd$CO2e)
+##################################################
+
+
+
+# make a data set of these averages
+
+n2o_ch4_co2<- data.frame(Crop = c("Kernza", "Kernza", "Kernza", "Kernza","Kernza", "Kernza", "Mango", "Mango","Mango", "Mango","Mango", "Mango","Cotton", "Cotton", "Cotton", "Cotton", "Cotton", "Cotton","Bison", "Bison", "Bison", "Bison", "Bison", "Bison"),
+                         Practice = c("Regenerative", "Organic", "Regenerative", "Organic", "Regenerative", "Organic", "Regenerative", "Organic"),
+                         Gas = c("N2O", "N2O", "CH4", "CH4","CO2","CO2", "N2O", "N2O", "CH4", "CH4","CO2","CO2","N2O", "N2O", "CH4", "CH4","CO2","CO2", "N2O", "N2O", "CH4", "CH4", "CO2","CO2"),
+                         kg_co2e = c(kernza_regen_n2o, kernza_organic_n2o, kernza_regen_ch4, kernza_organic_ch4, kernza_regen_co2, kernza_organic_co2, mango_regen_n2o, mango_organic_n2o, mango_regen_ch4, mango_organic_ch4, mango_regen_co2, mango_organic_co2, cotton_regen_n2o, cotton_organic_n2o, cotton_regen_ch4, cotton_oragnic_ch4, cotton_regen_co2, cotton_organic_co2, bison_regen_n2o, bison_organic_n2o, bison_regen_ch4, bison_organic_ch4, bison_regen_co2, bison_organic_co2))
 
 ####################################
 # Breakdown of GHG tab work
@@ -316,21 +498,16 @@ ui<- dashboardPage(skin = "black",
             fillPage(leafletOutput(outputId = "map_1", height = 1000)))
       ),
   dashboardBody(
-    tabItems(
-      tabItem(
-        tabName = "ghg",
-        sidebarLayout(sidebarPanel(
-          title = "Inputs",
-          radioButtons(inputId = "Crop",
-                       label = "Select Crop",
-                       choices = c("Cotton", "Mango", "Kernza", "Grazing")),
-        mainPanel("Results", plotOutput(outputId = "ghg_plot"))
-          )
-          )
+      tabItem(tabName = "ghg",
+              sidebarLayout(sidebarPanel(title = "Inputs",
+                                   radioButtons(inputId = "Crop",
+                                                label = "Select Crop",
+                                                choices = c("Cotton", "Mango", "Kernza", "Grazing"))),
+                      mainPanel(plotOutput(outputId = "ghg_plot")))
         )
       )
     )
-  )
+  
   
   
 
@@ -447,20 +624,15 @@ server<- function(input, output){
   ##########################
   
   # crop selection input for GHG break
-  crop_select<- reactive({
-    crops_filter %>% 
-      filter(Crop == input$Crop) %>% 
-      summarise(N2O = mean(N2O_CO2e),
-                CH4 = mean(CH4_CO2e),
-                CO2 = mean(CO2e))
+  crops_select<- reactive({
+    n2o_ch4_co2 %>% 
+      filter(Crop == input$Crop)
   })
-  
-  
   # vizual for ghg break
   
-  Results$ghg_plot<- renderPlot({ 
+  output$ghg_plot<- renderPlot({ 
     
-    ggplot(crop_select, aes(y = kg_co2e, x = Gas, fill = Gas))+
+    ggplot(crop_select(), aes(y = kg_co2e, x = Gas, fill = Gas))+
     geom_bar(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
     geom_hline(yintercept = 0)+
     facet_wrap(~Practice)+
@@ -469,11 +641,8 @@ server<- function(input, output){
     theme_classic()+
     theme(plot.title = element_text(hjust = 0.5, size = 30), axis.text.x = element_text(size = 20), axis.text.y = element_text(size = 20), strip.text = element_text(size = 20))
   
-  
-  })
-  
-  
-})
+    ghg_plot
+  })}
   
 
 
