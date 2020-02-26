@@ -312,26 +312,26 @@ ui<- dashboardPage(skin = "black",
       menuItem("Sources of GHG's", tabName = "ghg")
   )),
   dashboardBody(
-    tabItems(
-      tabItem(
-        tabName = "map",
-        fillPage(
-          leafletOutput(outputId = "map_1", height = 1000))
-        )
-      )
-    ),
+    tabItem(tabName = "map",
+            fillPage(leafletOutput(outputId = "map_1", height = 1000)))
+      ),
   dashboardBody(
     tabItems(
       tabItem(
         tabName = "ghg",
-        sidebarPanel(title = "Inputs",
-                     radioButtons(inputId = "Crop",
-                                  label = "Select Crop",
-                                  choices = c("Cotton", "Mango", "Kernza", "Grazing")
+        sidebarLayout(sidebarPanel(
+          title = "Inputs",
+          radioButtons(inputId = "Crop",
+                       label = "Select Crop",
+                       choices = c("Cotton", "Mango", "Kernza", "Grazing")),
+        mainPanel("Results", plotOutput(outputId = "ghg_plot"))
+          )
+          )
         )
       )
     )
-  )))
+  )
+  
   
 
 
@@ -452,8 +452,22 @@ server<- function(input, output){
   
   # vizual for ghg break
   
+  Results$ghg_plot<- renderPlot({ 
+    
+    ggplot(crop_select, aes(y = kg_co2e, x = Gas, fill = Gas))+
+    geom_bar(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
+    geom_hline(yintercept = 0)+
+    facet_wrap(~Practice)+
+    scale_fill_manual(values = c("darkslategray", "darkseagreen3", "darkseagreen4"))+
+    labs(title = "GRAZING", y = element_blank(), x = element_blank())+
+    theme_classic()+
+    theme(plot.title = element_text(hjust = 0.5, size = 30), axis.text.x = element_text(size = 20), axis.text.y = element_text(size = 20), strip.text = element_text(size = 20))
   
-}
+  
+  })
+  
+  
+})
   
 
 
