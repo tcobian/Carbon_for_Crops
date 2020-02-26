@@ -493,20 +493,26 @@ ui<- dashboardPage(skin = "black",
       menuItem("Practices", tabName = "sensativity"),
       menuItem("Sources of GHG's", tabName = "ghg")
   )),
-  dashboardBody(
+  dashboardBody(tabItems(
     tabItem(tabName = "map",
-            fillPage(leafletOutput(outputId = "map_1", height = 1000)))
-      ),
-  dashboardBody(
-      tabItem(tabName = "ghg",
-              sidebarLayout(sidebarPanel(title = "Inputs",
-                                   radioButtons(inputId = "Crop",
-                                                label = "Select Crop",
-                                                choices = c("Cotton", "Mango", "Kernza", "Grazing"))),
-                      mainPanel(plotOutput(outputId = "ghg_plot")))
-        )
-      )
-    )
+            fluidPage(leafletOutput(outputId = "map_1", height = 1000))))),
+  dashboardBody(tabItems(
+    tabItem(tabName = "overview",
+            fluidRow(
+              box(),
+              box()
+            ))
+  )),
+  dashboardBody(tabItems(
+    tabItem(tabName = "sensativity",
+            fluidRow(
+              box(),
+              box()
+            ))))
+
+)
+  
+
   
   
   
@@ -623,26 +629,8 @@ server<- function(input, output){
   # Input for widget #4 GHG breakdown
   ##########################
   
-  # crop selection input for GHG break
-  crops_select<- reactive({
-    n2o_ch4_co2 %>% 
-      filter(Crop == input$Crop)
-  })
-  # vizual for ghg break
-  
-  output$ghg_plot<- renderPlot({ 
-    
-    ggplot(crop_select(), aes(y = kg_co2e, x = Gas, fill = Gas))+
-    geom_bar(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
-    geom_hline(yintercept = 0)+
-    facet_wrap(~Practice)+
-    scale_fill_manual(values = c("darkslategray", "darkseagreen3", "darkseagreen4"))+
-    labs(title = "GRAZING", y = element_blank(), x = element_blank())+
-    theme_classic()+
-    theme(plot.title = element_text(hjust = 0.5, size = 30), axis.text.x = element_text(size = 20), axis.text.y = element_text(size = 20), strip.text = element_text(size = 20))
-  
-    ghg_plot
-  })}
+ 
+  }
   
 
 
