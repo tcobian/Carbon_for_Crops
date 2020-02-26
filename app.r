@@ -178,7 +178,7 @@ mango_nic<- bind_rows(mango_regen_nic_table, mango_organic_nic_table)
 colnames(mango_nic)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e")
 rownames(mango_nic)<- c("Regenerative ", "Organic")
 
-mango_nic_table<- kable(grazing_sd, caption = "Mangos: Nicaragua") %>% 
+mango_nic_table<- kable(mango_nic, caption = "Mangos: Nicaragua") %>% 
   kable_styling(bootstrap_options = "striped")
 mango_nic_table
 
@@ -201,7 +201,7 @@ mango_india<- bind_rows(mango_regen_india_table, mango_organic_india_table)
 colnames(mango_india)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e")
 rownames(mango_india)<- c("Regenerative ", "Organic")
 
-mango_india_table<- kable(grazing_sd, caption = "Mangos: India") %>% 
+mango_india_table<- kable(mango_india, caption = "Mangos: India") %>% 
   kable_styling(bootstrap_options = "striped")
 mango_india_table
 
@@ -306,7 +306,7 @@ ui<- dashboardPage(skin = "black",
   dashboardHeader(title = "Carbon for Crops"),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Regenratives Globally", tabName = "map"),
+      menuItem("Regeneratives Globally", tabName = "map"),
       menuItem("Soil Organic Carbon & GWP", tabName = "overview"),
       menuItem("Practices", tabName = "sensativity"),
       menuItem("Sources of GHG's", tabName = "ghg")
