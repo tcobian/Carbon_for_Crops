@@ -496,21 +496,17 @@ ui<- dashboardPage(skin = "black",
   dashboardBody(tabItems(
     tabItem(tabName = "map",
             fluidPage(leafletOutput(outputId = "map_1", height = 1000))))),
-  dashboardBody(tabItems(
-    tabItem(tabName = "overview",
+    tabItems(
+      tabItem(
+        tabName = "overview",
             fluidRow(
               box(),
-              box()
-            ))
-  )),
-  dashboardBody(tabItems(
-    tabItem(tabName = "sensativity",
+              box()))),
+    tabItems(
+      tabItem(tabName = "sensativity",
             fluidRow(
               box(),
-              box()
-            ))))
-
-)
+              box()))))
   
 
   
