@@ -493,9 +493,11 @@ ui<- dashboardPage(skin = "black",
       menuItem("Practices", tabName = "sensativity"),
       menuItem("Sources of GHG's", tabName = "ghg")
   )),
-  dashboardBody(tabItems(
-    tabItem(tabName = "map",
-            fluidPage(leafletOutput(outputId = "map_1", height = 1000))))),
+  dashboardBody(
+    tabItems(
+      tabItem(
+        tabName = "map",
+            fluidRow(leafletOutput(outputId = "map_1", height = 1000)))),
     tabItems(
       tabItem(
         tabName = "overview",
@@ -504,19 +506,22 @@ ui<- dashboardPage(skin = "black",
               box()))),
     tabItems(
       tabItem(tabName = "sensativity",
-            fluidRow(
-              box(),
-              box()))))
+              fluidRow(
+                box(title = "Sources of GHGs"),
+                box()))),
+    tabItems(
+      tabItem(
+        tabName = "ghg",
+        fluidRow(
+          box(),
+          box())))
+    
+  )
+)
   
 
   
   
-  
-
-
-
-
-
 
 server<- function(input, output){
   #####################################################################
@@ -630,9 +635,6 @@ server<- function(input, output){
   
 
 
-
 shinyApp(ui = ui, server = server)
-
-
 
 
