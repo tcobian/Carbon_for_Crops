@@ -497,30 +497,28 @@ ui<- dashboardPage(skin = "black",
     tabItems(
       tabItem(
         tabName = "map",
-            fluidRow(leafletOutput(outputId = "map_1", height = 1000)))),
-    tabItems(
+            fluidRow(leafletOutput(outputId = "map_1", height = 1000))),
       tabItem(
         tabName = "overview",
             fluidRow(
               box(),
-              box()))),
-    tabItems(
+              box())),
       tabItem(tabName = "sensativity",
               fluidRow(
                 box(title = "Sources of GHGs"),
-                box()))),
-    tabItems(
+                box())),
       tabItem(
         tabName = "ghg",
         fluidRow(
           box(title = "Breakdown of GHG Emissions",
               selectInput("ghg_crops",
                           "Choose a Crop",
-                          choices = c(unique(crops$Crop))),
-          box())))
+                          choices = c(unique(crops$Crop)))),
+          box())))))
+  
     
-  )
-))
+  
+
   
 
   
