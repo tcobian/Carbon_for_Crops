@@ -513,11 +513,14 @@ ui<- dashboardPage(skin = "black",
       tabItem(
         tabName = "ghg",
         fluidRow(
-          box(),
+          box(title = "Breakdown of GHG Emissions",
+              selectInput("ghg_crops",
+                          "Choose a Crop",
+                          choices = c(unique(crops$Crop))),
           box())))
     
   )
-)
+))
   
 
   
