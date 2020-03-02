@@ -284,6 +284,14 @@ ggplot(data = nic_mango, aes(x = Practice, y = mean_soc))+
 
 ```{r}
 
+ghg_break_down<- crops %>% 
+  group_by(Crop, Country, Practice) %>% 
+  summarise(mean_CO2 = mean(CO2e),
+            mean_CH4 = mean(CH4_CO2e),
+            mean_N2O = mean(N2O_CO2e)) %>% 
+  filter(Practice == "Organic" |
+         Practice == "Regenrative")
+
   
 
 
