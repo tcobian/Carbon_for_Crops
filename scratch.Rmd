@@ -291,6 +291,7 @@ ghg_break_down<- crops %>%
             mean_N2O = mean(N2O_CO2e)) %>% 
   filter(Practice == "Organic" |
          Practice == "Regenrative")
+  
 
   
 

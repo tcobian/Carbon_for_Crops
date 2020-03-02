@@ -581,7 +581,12 @@ server<- function(input, output){
       filter(Country == input$ghg_location)
   })
   
-
+output$ghg_plot<- renderPlot({
+  ggplot(data = ghg_df(), aes(x = Practice, y = mean_soc))+
+    geom_col(aes(fill = Practice), width = 0.5)+
+    scale_fill_manual(values = c("darkorange4", "darkorange"))+
+    theme_classic()
+})
   
   
   
