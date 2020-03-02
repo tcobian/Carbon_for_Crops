@@ -410,78 +410,15 @@ kernza_scotland_table<- kable(kernza_scotland, caption = "Kernza: Scotland") %>%
   kable_styling(bootstrap_options = "striped")
 kernza_scotland_table
 
-############################################################################
-kernza_regen_n2o<- sum(kernza_regen_minnesota$N2O_CO2e)
-kernza_organic_n2o<- sum(kernza_organic_minnesota$N2O_CO2e)
+###############################
 
-kernza_regen_ch4<- sum(kernza_regen_minnesota$CH4_CO2e)
-kernza_organic_ch4<- sum(kernza_organic_minnesota$CH4_CO2e)
-
-kernza_regen_co2<- sum(kernza_regen_minnesota$CO2e)
-kernza_organic_co2<- sum(kernza_organic_minnesota$CO2e)
-
-########################################
-mango_regen_n2o<- sum(mango_regen_nicaragua$N2O_CO2e)
-mango_organic_n2o<- sum(mango_organic_nicaragua$N2O_CO2e)
-
-mango_regen_ch4<- sum(mango_regen_nicaragua$CH4_CO2e)
-mango_organic_ch4<- sum(mango_organic_nicaragua$CH4_CO2e)
-
-mango_regen_co2<- sum(mango_regen_nicaragua$CO2e)
-mango_organic_co2<- sum(mango_organic_nicaragua$CO2e)
-
-######################################################
-cotton_regen_n2o<- sum(cotton_regen_texas$N2O_CO2e)
-cotton_organic_n2o<- sum(cotton_organic_texas$N2O_CO2e)
-
-cotton_regen_ch4<- sum(cotton_regen_texas$CH4_CO2e)
-cotton_oragnic_ch4<- sum(cotton_organic_texas$CH4_CO2e)
-
-cotton_regen_co2<- sum(cotton_regen_texas$CO2e)
-cotton_organic_co2<- sum(cotton_organic_texas$CO2e)
-
-
-####################################################
-bison_regen_n2o<- sum(bison_regen_sd$N2O_CO2e)
-bison_organic_n2o<- sum(bison_organic_sd$N2O_CO2e)
-
-bison_regen_ch4<- sum(bison_regen_sd$CH4_CO2e)
-bison_organic_ch4<- sum(bison_organic_sd$CH4_CO2e)
-
-bison_regen_co2<- sum(bison_regen_sd$CO2e)
-bison_organic_co2<- sum(bison_organic_sd$CO2e)
-##################################################
-
-
-
-# make a data set of these averages
-
-n2o_ch4_co2<- data.frame(Crop = c("Kernza", "Kernza", "Kernza", "Kernza","Kernza", "Kernza", "Mango", "Mango","Mango", "Mango","Mango", "Mango","Cotton", "Cotton", "Cotton", "Cotton", "Cotton", "Cotton","Bison", "Bison", "Bison", "Bison", "Bison", "Bison"),
-                         Practice = c("Regenerative", "Organic", "Regenerative", "Organic", "Regenerative", "Organic", "Regenerative", "Organic"),
-                         Gas = c("N2O", "N2O", "CH4", "CH4","CO2","CO2", "N2O", "N2O", "CH4", "CH4","CO2","CO2","N2O", "N2O", "CH4", "CH4","CO2","CO2", "N2O", "N2O", "CH4", "CH4", "CO2","CO2"),
-                         kg_co2e = c(kernza_regen_n2o, kernza_organic_n2o, kernza_regen_ch4, kernza_organic_ch4, kernza_regen_co2, kernza_organic_co2, mango_regen_n2o, mango_organic_n2o, mango_regen_ch4, mango_organic_ch4, mango_regen_co2, mango_organic_co2, cotton_regen_n2o, cotton_organic_n2o, cotton_regen_ch4, cotton_oragnic_ch4, cotton_regen_co2, cotton_organic_co2, bison_regen_n2o, bison_organic_n2o, bison_regen_ch4, bison_organic_ch4, bison_regen_co2, bison_organic_co2))
-
-####################################
-# Breakdown of GHG tab work
-####################################
-kernza<- crops %>% 
-  filter(Crop == "Kernza")
-
-cotton<- crops %>% 
-  filter(Crop == "Cotton") %>% 
-  filter(Practice == "Regenerativeerative" | 
-           Practice == "Organic")
-
-mango<- crops %>% 
-  filter(Crop == "Mango")
-
-grazing<- crops %>% 
-  filter(Crop == "Bison")
-
-crops_filter<- bind_rows(kernza, cotton, mango, grazing)
-
-#####################################
-
+ghg_break_down<- crops %>% 
+  group_by(Crop, Country, Practice) %>% 
+  summarise(mean_CO2 = mean(CO2e),
+            mean_CH4 = mean(CH4_CO2e),
+            mean_N2O = mean(N2O_CO2e)) %>% 
+  filter(Practice == "Organic" |
+           Practice == "Regenrative")
 
 
 ui<- dashboardPage(skin = "black",
@@ -494,27 +431,41 @@ ui<- dashboardPage(skin = "black",
       menuItem("Sources of GHG's", tabName = "ghg")
   )),
   dashboardBody(
-    tabItem(tabName = "map",
-            fillPage(leafletOutput(outputId = "map_1", height = 1000)))
-      ),
-  dashboardBody(
-      tabItem(tabName = "ghg",
-              sidebarLayout(sidebarPanel(title = "Inputs",
-                                   radioButtons(inputId = "Crop",
-                                                label = "Select Crop",
-                                                choices = c("Cotton", "Mango", "Kernza", "Grazing"))),
-                      mainPanel(plotOutput(outputId = "ghg_plot")))
-        )
-      )
-    )
+    tabItems(
+      tabItem(
+        tabName = "map",
+            fluidRow(leafletOutput(outputId = "map_1", height = 1000))),
+      tabItem(
+        tabName = "overview",
+            fluidRow(
+              box(),
+              box())),
+      tabItem(tabName = "sensativity",
+              fluidRow(
+                box(title = "Sources of GHGs"),
+                box())),
+      tabItem(
+        tabName = "ghg",
+        fluidRow(
+          box(title = "Breakdown of GHG Emissions",
+              selectInput("ghg_crops",
+                          "Choose a Crop",
+                          choices = c(unique(crops$Crop))),
+              selectInput("ghg_practice",
+                          "Choose a Practice",
+                          choices = c("Regenerative", "Organic")),
+              selectInput("ghg_location",
+                          "Choose a Location",
+                          choices = c(unique(crops$Country)))),
+          box(plotOutput(outputId = "ghg_plot")))))))
+  
+    
+  
+
+  
+
   
   
-  
-
-
-
-
-
 
 server<- function(input, output){
   #####################################################################
@@ -624,32 +575,29 @@ server<- function(input, output){
   # Input for widget #4 GHG breakdown
   ##########################
   
-  # crop selection input for GHG break
-  crops_select<- reactive({
-    n2o_ch4_co2 %>% 
-      filter(Crop == input$Crop)
+  ghg_df<- reactive({
+    ghg_break_down %>% 
+      filter(Crop == input$ghg_crops) %>% 
+      filter(Practice == input$ghg_practice) %>% 
+      filter(Country == input$ghg_location)
   })
-  # vizual for ghg break
   
-  output$ghg_plot<- renderPlot({ 
-    
-    ggplot(crop_select(), aes(y = kg_co2e, x = Gas, fill = Gas))+
-    geom_bar(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
-    geom_hline(yintercept = 0)+
-    facet_wrap(~Practice)+
-    scale_fill_manual(values = c("darkslategray", "darkseagreen3", "darkseagreen4"))+
-    labs(title = "GRAZING", y = element_blank(), x = element_blank())+
-    theme_classic()+
-    theme(plot.title = element_text(hjust = 0.5, size = 30), axis.text.x = element_text(size = 20), axis.text.y = element_text(size = 20), strip.text = element_text(size = 20))
+output$ghg_plot<- renderPlot({
+  ggplot(data = ghg_df(), aes(x = Practice, y = mean_soc))+
+    geom_col(aes(fill = Practice), width = 0.5)+
+    scale_fill_manual(values = c("darkorange4", "darkorange"))+
+    theme_classic()
+})
   
-    ghg_plot
-  })}
   
-
+  
+  
+  
+ 
+  }
+  
 
 
 shinyApp(ui = ui, server = server)
-
-
 
 
