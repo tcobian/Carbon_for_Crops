@@ -513,7 +513,13 @@ ui<- dashboardPage(skin = "black",
           box(title = "Breakdown of GHG Emissions",
               selectInput("ghg_crops",
                           "Choose a Crop",
-                          choices = c(unique(crops$Crop)))),
+                          choices = c(unique(crops$Crop))),
+              selectInput("ghg_practice",
+                          "Choose a Practice",
+                          choices = c("Regenerative", "Organic")),
+              selectInput("ghg_location",
+                          "Choose a Location",
+                          choices = c(unique(crops$Country)))),
           box())))))
   
     
