@@ -477,7 +477,7 @@ ui<- dashboardPage(skin = "black",
   
   
 
-server<- function(input, output){
+server<- function(input, output, session){
   #####################################################################
   # Widget #1: Map
   #####################################################################
@@ -614,10 +614,16 @@ output$ghg_table<- function(){
 }
   
 
+observe({
+  updateSelectInput(session,
+                    "ghg_location",
+                    choices = crops %>% 
+                      filter(Crop == input$ghg_crops) %>% 
+                      select(Country))
+})
 
 
-  
-  
+
  
   }
   
