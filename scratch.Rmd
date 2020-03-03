@@ -286,14 +286,25 @@ ggplot(data = nic_mango, aes(x = Practice, y = mean_soc))+
 
 ghg_break_down<- crops %>% 
   group_by(Crop, Country, Practice) %>% 
-  summarise(mean_CO2 = mean(CO2e),
-            mean_CH4 = mean(CH4_CO2e),
-            mean_N2O = mean(N2O_CO2e)) %>% 
+  summarise(CO2 = mean(CO2e),
+            CH4 = mean(CH4_CO2e),
+            N2O = mean(N2O_CO2e)) %>% 
   filter(Practice == "Organic" |
          Practice == "Regenerative") %>% 
   gather("Gas", "kgCO2e", 4:6)
 
 
+ghg_total<- crops %>%
+  group_by(Crop, Practice, Country) %>% 
+  summarise(GHG = mean(GWP)) %>% 
+  filter(Practice == "Organic" |
+         Practice == "Regenerative")
+ghg_total
+
+ghg_table<- kable(ghg_break_down) %>% 
+    kable_styling(bootstrap_options = c("striped", "hover"))
+
+ghg_table
 
 
 ```

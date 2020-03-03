@@ -414,12 +414,21 @@ kernza_scotland_table
 
 ghg_break_down<- crops %>% 
   group_by(Crop, Country, Practice) %>% 
-  summarise(mean_CO2 = mean(CO2e),
-            mean_CH4 = mean(CH4_CO2e),
-            mean_N2O = mean(N2O_CO2e)) %>% 
+  summarise(CO2 = mean(CO2e),
+            CH4 = mean(CH4_CO2e),
+            N2O = mean(N2O_CO2e),
+            GWP = mean(GWP)) %>% 
   filter(Practice == "Organic" |
-           Practice == "Regenrative")
+           Practice == "Regenerative") %>% 
+  gather("Gas", "kgCO2e", 4:6)
 
+ghg_total<- crops %>%
+  group_by(Crop, Practice, Country) %>% 
+  summarise(GHG = mean(GWP)) %>% 
+  filter(Practice == "Organic" |
+           Practice == "Regenerative")
+ghg_total
+##################################
 
 ui<- dashboardPage(skin = "black",
   dashboardHeader(title = "Carbon for Crops"),
@@ -447,17 +456,18 @@ ui<- dashboardPage(skin = "black",
       tabItem(
         tabName = "ghg",
         fluidRow(
-          box(title = "Breakdown of GHG Emissions",
+          box(title = "Sources of GHG Emissions",
               selectInput("ghg_crops",
                           "Choose a Crop",
                           choices = c(unique(crops$Crop))),
-              selectInput("ghg_practice",
+              radioButtons("ghg_practice",
                           "Choose a Practice",
                           choices = c("Regenerative", "Organic")),
               selectInput("ghg_location",
                           "Choose a Location",
                           choices = c(unique(crops$Country)))),
-          box(plotOutput(outputId = "ghg_plot")))))))
+          box(plotOutput(outputId = "ghg_plot")),
+          box(tableOutput(outputId = "ghg_table")))))))
   
     
   
@@ -583,11 +593,25 @@ server<- function(input, output){
   })
   
 output$ghg_plot<- renderPlot({
-  ggplot(data = ghg_df(), aes(x = Practice, y = mean_soc))+
-    geom_col(aes(fill = Practice), width = 0.5)+
-    scale_fill_manual(values = c("darkorange4", "darkorange"))+
-    theme_classic()
+  ggplot(data = ghg_df(), aes(x = Gas, y = kgCO2e, fill = Gas))+
+    geom_bar(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
+    scale_fill_manual(values = c("darkolivegreen", "darkolivegreen3", "darkolivegreen1"))+
+    labs(title = "Avereage Yearly GHG Emissions", x = "Emissions from Each Gas")+
+    theme_minimal()
 })
+
+
+output$ghg_table<- function(){
+  req(input$ghg_crops)
+  req(input$ghg_practice)
+  req(input$ghg_location)
+  
+  ghg_total %>% 
+    filter(Crop == input$ghg_crops) %>% 
+    filter(Country == input$ghg_location) %>% 
+    kable("html", col.names = c("Crop", "Practice", "Location", "Yearly GHG Emissions (kgCO2e)")) %>% 
+    kable_styling(bootstrap_options = c("striped", "hover"))
+}
   
   
   
