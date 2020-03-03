@@ -465,7 +465,7 @@ ui<- dashboardPage(skin = "black",
                           choices = c("Regenerative", "Organic")),
               selectInput("ghg_location",
                           "Choose a Location",
-                          choices = c(unique(crops$Country)))),
+                          choices = c(crops$Country))),
           box(plotOutput(outputId = "ghg_plot")),
           box(tableOutput(outputId = "ghg_table")))))))
   
@@ -614,17 +614,19 @@ output$ghg_table<- function(){
 }
   
 
+
+
 observe({
   updateSelectInput(session,
                     "ghg_location",
                     choices = crops %>% 
                       filter(Crop == input$ghg_crops) %>% 
-                      select(Country))
+                      select(Country) %>%
+                      unique() 
+                      )
 })
 
 
-
- 
   }
   
 
