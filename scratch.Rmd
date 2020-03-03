@@ -290,14 +290,8 @@ ghg_break_down<- crops %>%
             mean_CH4 = mean(CH4_CO2e),
             mean_N2O = mean(N2O_CO2e)) %>% 
   filter(Practice == "Organic" |
-         Practice == "Regenrative")
-
-
-ghg_break_down %>% 
-  gather(mean_CO2, mean_CH4, mean_N2O)
-
-  
-
+         Practice == "Regenerative") %>% 
+  gather("Gas", "kgCO2e", 4:6)
 
 
 
