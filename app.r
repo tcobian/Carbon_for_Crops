@@ -613,8 +613,9 @@ output$ghg_table<- function(){
     kable_styling(bootstrap_options = c("striped", "hover"))
 }
   
-  
-  
+
+
+
   
   
  
