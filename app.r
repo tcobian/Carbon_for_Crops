@@ -19,89 +19,75 @@ crops<- read_csv("Total_Crops.csv")
 cotton_regen_texas <- crops %>% 
   filter(Country == "Texas",
          Practice == "Regenerative",
-         Crop == "Cotton") %>% 
-  group_by(Practice)
+         Crop == "Cotton") 
 
 cotton_organic_texas <- crops%>% 
   filter(Country == "Texas",
          Practice == "Organic",
-         Crop == "Cotton") %>% 
-  group_by(Practice)
+         Crop == "Cotton") 
 
 
 cotton_regen_india <- crops %>% 
   filter(Country == "India",
          Practice == "Regenerative",
-         Crop == "Cotton") %>% 
-  group_by(Practice)
+         Crop == "Cotton") 
 
 cotton_organic_india <- crops %>% 
   filter(Country == "India",
          Practice == "Organic",
-         Crop == "Cotton") %>% 
-  group_by(Practice)
+         Crop == "Cotton") 
 
 
 cotton_regen_peru <- crops %>% 
   filter(Country == "Peru",
          Practice == "Regenerative",
-         Crop == "Cotton") %>% 
-  group_by(Practice)
+         Crop == "Cotton") 
 
 cotton_organic_peru <- crops %>% 
   filter(Country == "Peru",
          Practice == "Organic",
-         Crop == "Cotton") %>% 
-  group_by(Practice)
+         Crop == "Cotton") 
 
 cotton_regen_china <- crops%>% 
   filter(Country == "China",
          Practice == "Regenerative",
-         Crop == "Cotton") %>% 
-  group_by(Practice)
+         Crop == "Cotton") 
 
 cotton_organic_china <- crops %>% 
   filter(Country == "China",
          Practice == "Organic",
-         Crop == "Cotton") %>% 
-  group_by(Practice)
+         Crop == "Cotton") 
 
 kernza_regen_minnesota <- crops %>% 
   filter(Country == "Minnesota",
          Practice == "Regenerative",
-         Crop == "Kernza") %>% 
-  group_by(Practice)
+         Crop == "Kernza") 
 
 kernza_organic_minnesota <- crops %>% 
   filter(Country == "Minnesota",
          Practice == "Organic",
-         Crop == "Kernza") %>% 
-  group_by(Practice)
+         Crop == "Kernza") 
 
 
 kernza_regen_scotland <- crops %>% 
   filter(Country == "Scotland",
          Practice == "Regenerative",
-         Crop == "Kernza") %>% 
-  group_by(Practice)
+         Crop == "Kernza") 
 
 kernza_organic_scotland <- crops %>% 
   filter(Country == "Scotland",
          Practice == "Organic",
-         Crop == "Kernza") %>% 
-  group_by(Practice)
+         Crop == "Kernza") 
 
 kernza_regen_kansas <- crops %>% 
   filter(Country == "Kansas",
          Practice == "Regenerative",
-         Crop == "Kernza") %>% 
-  group_by(Practice)
+         Crop == "Kernza") 
 
 kernza_organic_kansas <- crops %>% 
   filter(Country == "Kansas",
          Practice == "Organic",
-         Crop == "Kernza") %>% 
-  group_by(Practice)
+         Crop == "Kernza") 
 
 mango_regen_nicaragua <- crops %>% 
   filter(Country == "Nicaragua",
@@ -126,26 +112,22 @@ mango_organic_india <- crops %>%
 bison_regen_sd <- crops %>% 
   filter(Country == "South Dakota",
          Practice == "Regenerative",
-         Crop == "Bison") %>% 
-  group_by(Practice)
+         Crop == "Bison") 
 
 bison_organic_sd <- crops%>% 
   filter(Country == "South Dakota",
          Practice == "Organic",
-         Crop == "Bison") %>% 
-  group_by(Practice)
+         Crop == "Bison") 
 
 bison_regen_bz <- crops %>% 
   filter(Country == "Brazil",
          Practice == "Regenerative",
-         Crop == "Bison") %>% 
-  group_by(Practice)
+         Crop == "Bison") 
 
 bison_organic_bz <- crops %>% 
   filter(Country == "Brazil",
          Practice == "Organic",
-         Crop == "Bison") %>% 
-  group_by(Practice)
+         Crop == "Bison") 
 ####################################################
 # map markers
 ####################################################
@@ -383,7 +365,7 @@ kernza_ks<- bind_rows(kernza_regen_ks_table, kernza_organic_ks_table)
 colnames(kernza_ks)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e")
 rownames(kernza_ks)<- c("Regenerative ", "Organic")
 
-kernza_ks_table<- kable(kernza_min, caption = "Kernza: Kansas") %>% 
+kernza_ks_table<- kable(kernza_ks, caption = "Kernza: Kansas") %>% 
   kable_styling(bootstrap_options = "striped")
 kernza_ks_table
 
@@ -449,6 +431,7 @@ ui<- dashboardPage(skin = "black",
   dashboardHeader(title = "Carbon for Crops"),
   dashboardSidebar(
     sidebarMenu(
+      menuItem("Home", tabName = "home"),
       menuItem("Regeneratives Globally", tabName = "map"),
       menuItem("Soil Organic Carbon & GWP", tabName = "overview"),
       menuItem("Practices", tabName = "sensativity"),
@@ -456,6 +439,9 @@ ui<- dashboardPage(skin = "black",
   )),
   dashboardBody(
     tabItems(
+      tabItem(
+        tabName = "home"
+      ),
       tabItem(
         tabName = "map",
             fluidRow(leafletOutput(outputId = "map_1", height = 1000))),
@@ -504,6 +490,10 @@ server<- function(input, output, session){
   #####################################################################
   # Widget #1: Map
   #####################################################################
+  
+  
+
+  
   
   map_data<- tribble(
     ~id, ~lon, ~lat,
