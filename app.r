@@ -428,6 +428,14 @@ ghg_total<- crops %>%
   filter(Practice == "Organic" |
            Practice == "Regenerative")
 ghg_total
+
+overview_total<- crops %>%
+  group_by(Crop, Practice, Country) %>% 
+  summarise(GHG = mean(GWP),
+            SOC = mean(dSOC)) %>% 
+  filter(Practice == "Organic" |
+           Practice == "Regenerative")
+
 ##################################
 
 ui<- dashboardPage(skin = "black",
@@ -447,8 +455,16 @@ ui<- dashboardPage(skin = "black",
       tabItem(
         tabName = "overview",
             fluidRow(
-              box(),
-              box())),
+              box(title = "Summary of Crop SOC and GHG Emissions",
+                  selectInput("overview_crops",
+                              "Choose a Crop",
+                              choices = c(unique(crops$Crop))),
+                  selectInput("overview_location",
+                              "Choose a Location",
+                              choices = c(unique(crops$Country)))),
+              box(plotOutput(outputId = "overview_plot1")),
+              box(tableOutput(outputId = "overview_table")),
+              box(plotOutput(outputId = "overview_plot2")))),
       tabItem(tabName = "sensativity",
               fluidRow(
                 box(title = "Sources of GHGs"),
@@ -576,6 +592,42 @@ server<- function(input, output, session){
   #########################
   # Widget 2
   #########################
+  
+  crop_overview = reactive({
+    crop_breakdown %>% 
+      filter(Crop == input$overview_crops) %>% 
+      filter(Country == input$overview_location) 
+  })
+  
+  output$overview_plot1 = renderPlot({
+    ggplot(data = crop_overview(), aes(x = Practice, y = mean_soc))+
+      geom_col(aes(fill = Practice), width = 0.5)+
+      geom_hline(yintercept = 0)+
+      scale_fill_manual(values = c("deepskyblue4", "deepskyblue"))+
+      theme_classic()
+  })
+  
+  output$overview_table<- function(){
+    req(input$overview_crops)
+    req(input$overview_location)
+    
+    overview_total %>% 
+      filter(Crop == input$overview_crops) %>% 
+      filter(Country == input$overview_location) %>%
+      filter(Practice == "Regenerative" |
+               Practice == "Organic") %>% 
+      kable("html", col.names = c("Crop", "Practice", "Location", "Average SOC Change (kgSOC/ha)", "Average GHG Emissions (CO2e)")) %>% 
+      kable_styling(bootstrap_options = c("striped", "hover"))
+  }
+  
+  output$overview_plot2 = renderPlot({
+    ggplot(data = crop_overview(), aes(x = Practice, y = mean_ghg))+
+      geom_col(aes(fill = Practice), width = 0.5)+
+      geom_hline(yintercept = 0)+
+      scale_fill_manual(values = c("darkorange4", "darkorange"))+
+      theme_classic()
+  })
+  
   
   
   
