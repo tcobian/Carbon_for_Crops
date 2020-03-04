@@ -429,6 +429,13 @@ ghg_total<- crops %>%
            Practice == "Regenerative")
 ghg_total
 
+crop_breakdown = crops %>% 
+  group_by(Crop, Country, Practice) %>% 
+  summarise(mean_soc = mean(dSOC),
+            mean_ghg = mean(GWP)) %>% 
+  filter(Practice == "Organic" |
+           Practice == "Regenerative")
+
 overview_total<- crops %>%
   group_by(Crop, Practice, Country) %>% 
   summarise(GHG = mean(GWP),
@@ -628,7 +635,15 @@ server<- function(input, output, session){
       theme_classic()
   })
   
-  
+observe({
+  updateSelectInput(session,
+                    "overview_location",
+                    choices = crops %>% 
+                      filter(Crop == input$overview_crops) %>% 
+                      select(Country) %>%
+                      unique() 
+    )
+  })  
   
   
   
