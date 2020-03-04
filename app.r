@@ -663,7 +663,7 @@ output$ghg_plot<- renderPlot({
   ggplot(data = ghg_df(), aes(x = Gas, y = kgCO2e, fill = Gas))+
     geom_bar(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
     scale_fill_manual(values = c("darkolivegreen", "darkolivegreen3", "darkolivegreen1"))+
-    labs(title = "Avereage Yearly GHG Emissions", x = "Emissions from Each Gas")+
+    labs(title = "Average Yearly GHG Emissions", x = "Emissions from Each Gas")+
     theme_minimal()
 })
 
