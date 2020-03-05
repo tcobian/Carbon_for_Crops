@@ -421,8 +421,8 @@ crop_breakdown = crops %>%
 
 overview_total<- crops %>%
   group_by(Crop, Practice, Country) %>% 
-  summarise(GHG = mean(GWP),
-            SOC = mean(dSOC)) %>% 
+  summarise(SOC = mean(dSOC),
+            GHG = mean(GWP)) %>% 
   filter(Practice == "Organic" |
            Practice == "Regenerative")
 
@@ -443,9 +443,10 @@ ui<- dashboardPage(skin = "black",
       tabItem(
         tabName = "home",
           fluidPage(
+            setBackgroundImage(src = "land.jpeg", shinydashboard = TRUE),
             titlePanel(strong("Assessing the Soil & Climate Impacts of Regenerative Agriculture")),
             br(),
-            h3("A study conducted by graduate students of the Bren School in collaboration with Patagonia, Inc."),
+            div(h3(em("A study conducted by graduate students of the Bren School in collaboration with Patagonia, Inc.", align = "center")), style = "color:black"),
             br()
             
           )
@@ -609,6 +610,7 @@ server<- function(input, output, session){
       geom_col(aes(fill = Practice), width = 0.5)+
       geom_hline(yintercept = 0)+
       scale_fill_manual(values = c("deepskyblue4", "deepskyblue"))+
+      labs(x = "Practice", y = "Average SOC change (kgSOC/ha)", title = "Comparison of SOC change per hectare between Regenerative and Organic")+
       theme_classic()
   })
   
@@ -621,7 +623,7 @@ server<- function(input, output, session){
       filter(Country == input$overview_location) %>%
       filter(Practice == "Regenerative" |
                Practice == "Organic") %>% 
-      kable("html", col.names = c("Crop", "Practice", "Location", "Average SOC Change (kgSOC/ha)", "Average GHG Emissions (CO2e)")) %>% 
+      kable("html", col.names = c("Crop", "Practice", "Location", "Average SOC Change (kgSOC/ha)", "Average GHG Emissions (kg CO2e)")) %>% 
       kable_styling(bootstrap_options = c("striped", "hover"))
   }
   
@@ -630,6 +632,7 @@ server<- function(input, output, session){
       geom_col(aes(fill = Practice), width = 0.5)+
       geom_hline(yintercept = 0)+
       scale_fill_manual(values = c("darkorange4", "darkorange"))+
+      labs(x = "Practice", y = "Average GHG Emissions (kgCO2e/ha)", title = "Comparison of Greenhouse Gas Emissions between Regenerative and Organic Practices")+
       theme_classic()
   })
   
