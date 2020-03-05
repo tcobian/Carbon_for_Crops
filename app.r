@@ -6,6 +6,7 @@ library(shinythemes)
 library(tmap)
 library(sf)
 library(leaflet)
+library(shinyWidgets)
 
 
 #######
@@ -440,7 +441,14 @@ ui<- dashboardPage(skin = "black",
   dashboardBody(
     tabItems(
       tabItem(
-        tabName = "home"
+        tabName = "home",
+          fluidPage(
+            titlePanel(strong("Assessing the Soil & Climate Impacts of Regenerative Agriculture")),
+            br(),
+            h3("A study conducted by graduate students of the Bren School in collaboration with Patagonia, Inc."),
+            br()
+            
+          )
       ),
       tabItem(
         tabName = "map",
