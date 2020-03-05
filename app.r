@@ -446,8 +446,10 @@ ui<- dashboardPage(skin = "black",
             setBackgroundImage(src = "land.jpeg", shinydashboard = TRUE),
             titlePanel(strong("Assessing the Soil & Climate Impacts of Regenerative Agriculture")),
             br(),
-            div(h3(em("A study conducted by graduate students of the Bren School in collaboration with Patagonia, Inc.", align = "center")), style = "color:black"),
-            br()
+            box(h3(em("A study conducted by graduate students of the Bren School in collaboration with Patagonia, Inc.", align = "center")), height = 70, width = 100),
+            br(),
+            img(src = "bren.png", height = 58, width = 171),
+            img(src = "patagonia.png", height = 58, width = 140)
             
           )
       ),
