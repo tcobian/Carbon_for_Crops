@@ -733,16 +733,16 @@ output$practice_sum_GWP <- renderPlot({
 
   output$practice_dSOC <- renderPlot({
     ggplot(data = practice_df(), aes(x = Year, y = dSOC)) +
-      geom_col(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
-      scale_fill_manual(values = c("darkolivegreen", "darkolivegreen3", "darkolivegreen1"))+
+      geom_col(stat = "identity", position = "dodge", show.legend = "False", width = 0.5, fill =
+                 "deepskyblue4")+
       labs(title = "dSOC per year", x = "Year", y = "Total dSOC")+
       theme_minimal()
   })
   
   output$practice_GWP <- renderPlot({
     ggplot(data = practice_df(), aes(x = Year, y = GWP)) +
-      geom_col(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
-      scale_fill_manual(values = c("darkolivegreen", "darkolivegreen3", "darkolivegreen1"))+
+      geom_col(stat = "identity", position = "dodge", show.legend = "False", width = 0.5, fill =
+                 "darkolivegreen3")+
       labs(title = "GWP per year", x = "Year", y = "Total GWP")+
       theme_minimal()
   })
