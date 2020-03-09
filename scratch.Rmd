@@ -282,6 +282,40 @@ ggplot(data = nic_mango, aes(x = Practice, y = mean_soc))+
 
 ```
 
+
+Widget 3
+```{r}
+#Cumulative graph
+practices <- crops %>% 
+  group_by(Crop, Country, Practice) %>% 
+  summarise(sum_dSOC = sum(dSOC),
+            sum_GWP = sum(GWP)) %>% 
+  filter(Practice == "Monocrop" |
+         Practice == "Twocrops" | 
+         Practice == "Threecrops" |
+         Practice == "Fourcrops")
+  
+output$practice_plot<- renderPlot({
+  ggplot(data = practice_df(), aes(x = Practice, y = sum_dSOC, fill = Gas))+
+    geom_bar(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
+    scale_fill_manual(values = c("darkolivegreen", "darkolivegreen3", "darkolivegreen1"))+
+    labs(title = "Average Yearly GHG Emissions", x = "Emissions from Each Gas")+
+    theme_minimal()
+})
+
+
+
+practices_yearly <- crops %>% 
+  group_by(Crop, Country, Practice) %>% 
+  filter(Practice == "Monocrop" |
+           Practice == "Twocrops" | 
+           Practice == "Threecrops" |
+           Practice == "Fourcrops") %>% 
+  select(Year, Crop, Country, Practice, dSOC, GWP)
+```
+
+
+
 ```{r}
 
 ghg_break_down<- crops %>% 

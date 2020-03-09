@@ -394,6 +394,31 @@ kernza_scotland_table<- kable(kernza_scotland, caption = "Kernza: Scotland") %>%
 kernza_scotland_table
 
 ###############################
+# Widget 3
+
+practices_yearly <- crops %>% 
+  filter(Practice == "Monocrop" |
+           Practice == "Twocrops" | 
+           Practice == "Threecrops" |
+           Practice == "Fourcrops") %>% 
+  mutate(Practice = case_when(
+    Practice == "Monocrop" ~ 1,
+    Practice == "Twocrops" ~ 2,
+    Practice == "Threecrops" ~ 3,
+    Practice == "Fourcrops" ~ 4)) %>% 
+  select(Year, Crop, Country, Practice, dSOC, GWP) %>% 
+  arrange(Practice)
+
+
+practices_sum <- practices_yearly %>%  
+  group_by(Crop, Country, Practice) %>% 
+  summarise(sum_dSOC = sum(dSOC),
+            sum_GWP = sum(GWP))
+  
+
+
+
+###############################
 
 ghg_break_down<- crops %>% 
   group_by(Crop, Country, Practice) %>% 
@@ -469,10 +494,26 @@ ui<- dashboardPage(skin = "black",
               box(plotOutput(outputId = "overview_plot1")),
               box(tableOutput(outputId = "overview_table")),
               box(plotOutput(outputId = "overview_plot2")))),
-      tabItem(tabName = "sensativity",
-              fluidRow(
-                box(title = "Sources of GHGs"),
-                box())),
+      tabItem( #####
+        tabName = "sensativity",
+        fluidRow(
+          box(title = "Impact of cropping methods on GHG emissions",
+              selectInput("practices_crops",
+                          "Choose a target crop",
+                          choices = c(unique(practices_yearly$Crop))),
+              selectInput("practices_location",
+                          "Choose a Location",
+                          choices = c(unique(practices_yearly$Country))),
+              sliderTextInput("practices_number", 
+                          label = "Choose the number of crops grown on a single plot:", 
+                          choices = c(unique(practices_yearly$Practice)),
+                          grid = TRUE,
+                          hide_min_max = TRUE)),
+          box(plotOutput(outputId = "practice_sum_dSOC")),
+          box(plotOutput(outputId = "practice_sum_GWP")),
+          box(plotOutput(outputId = "practice_dSOC")),
+          box(plotOutput(outputId = "practice_GWP")))),
+      
       tabItem(
         tabName = "ghg",
         fluidRow(
@@ -648,9 +689,66 @@ observe({
     )
   })  
   
+  #########################
+  # Widget 3
+  #########################
+
+  practice_df <- reactive({
+    practices_yearly %>% 
+      filter(Crop == input$practices_crops) %>% 
+      filter(Country == input$practices_location) %>% 
+      filter(Practice == input$practices_number)
+  })
+
+cols <- reactive({
+  cols <- c("1" = "grey", "2" =  "grey", "3" =  "grey",
+            "4" =  "grey")
+  cols[input$practices_number] <- "deepskyblue4"
+  return(cols)
+})
+
+cols2 <- reactive({
+  cols2 <- c("1" = "grey", "2" =  "grey", "3" =  "grey",
+            "4" =  "grey")
+  cols2[input$practices_number] <- "darkolivegreen3"
+  return(cols2)
+})
+
+output$practice_sum_dSOC <- renderPlot({
+  ggplot(data = practices_sum, aes(x = Practice, y = sum_dSOC, color = factor(Practice), fill = factor(Practice))) +
+    geom_col(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
+    scale_colour_manual(values = cols(), aesthetics = c("colour", "fill"))+
+    labs(title = "Total dSOC by number of crops", x = "Number of crops", y = "Total dSOC")+
+    theme_minimal()
+})
+
+output$practice_sum_GWP <- renderPlot({
+  ggplot(data = practices_sum, aes(x = Practice, y = sum_GWP, color = factor(Practice), fill = factor(Practice))) +
+    geom_col(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
+    scale_colour_manual(values = cols2(), aesthetics = c("colour", "fill"))+
+    labs(title = "Total GWP by number of crops", x = "Number of crops", y = "Total GWP")+
+    theme_minimal()
+})
+
+
+  output$practice_dSOC <- renderPlot({
+    ggplot(data = practice_df(), aes(x = Year, y = dSOC)) +
+      geom_col(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
+      scale_fill_manual(values = c("darkolivegreen", "darkolivegreen3", "darkolivegreen1"))+
+      labs(title = "dSOC per year", x = "Year", y = "Total dSOC")+
+      theme_minimal()
+  })
   
-  
-  
+  output$practice_GWP <- renderPlot({
+    ggplot(data = practice_df(), aes(x = Year, y = GWP)) +
+      geom_col(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
+      scale_fill_manual(values = c("darkolivegreen", "darkolivegreen3", "darkolivegreen1"))+
+      labs(title = "GWP per year", x = "Year", y = "Total GWP")+
+      theme_minimal()
+  })
+
+
+
   #########################
   # Input for widget #4 GHG breakdown
   ##########################
