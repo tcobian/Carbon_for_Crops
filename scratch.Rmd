@@ -10,6 +10,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
+
+
 ```{r}
 library(kableExtra)
 library(tidyverse)
@@ -345,8 +347,24 @@ ghg_table
 
 
 
+```{r}
+kernza_sens<- read_csv("kernza_updated.csv")
+bison_sens<- read_csv("bison_compiling_sensativity.csv")
+mango_sens<- read_csv("MANGO_sens.csv")
+```
 
 
+Make one data set with all the crop sensativity tests
+```{r}
+crops_cotton_sens<- crops %>% 
+  filter(Crop == "Cotton") %>% 
+  filter(Country == "India") %>% 
+  filter(Practice == "Monocrop" |
+           Practice == "Twocrops"|
+           Practice == "Threecrops" |
+           Practice == "Fourcrops" |
+           Practice == "Regenerative")
+```
 
 
 

@@ -13,6 +13,9 @@ library(shinyWidgets)
 # Working Space
 #######
 crops<- read_csv("Total_Crops.csv")
+kernza_sens<- read_csv("kernza_updated.csv")
+bison_sens<- read_csv("bison_compiling_sensativity.csv")
+mango_sens<- read_csv("MANGO_sens.csv")
 
 
 
