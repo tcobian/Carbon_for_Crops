@@ -7,8 +7,8 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-```
 
+```
 
 
 
@@ -25,6 +25,7 @@ library(leaflet)
 
 crops<- read_csv("Total_Crops.csv")
 ```
+
 
 
 Widget #1
@@ -356,14 +357,45 @@ mango_sens<- read_csv("MANGO_sens.csv")
 
 Make one data set with all the crop sensativity tests
 ```{r}
-crops_cotton_sens<- crops %>% 
+cotton_sens<- crops %>% 
   filter(Crop == "Cotton") %>% 
   filter(Country == "India") %>% 
   filter(Practice == "Monocrop" |
            Practice == "Twocrops"|
            Practice == "Threecrops" |
            Practice == "Fourcrops" |
-           Practice == "Regenerative")
+           Practice == "Regenerative") %>% 
+  select(-Country)
+
+
+mango_sens
+
+
+bison_sens_1<- bison_sens %>% 
+  filter(crops_practices != "compost") %>% 
+  select(-site)
+
+
+bison_sens_1$crops_practices[1:20]<- "Monocrop"
+bison_sens_1$crops_practices[21:40]<- "Twocrops"
+bison_sens_1$crops_practices[41:60]<- "Threecrops"
+bison_sens_1$crops_practices[61:80]<- "Fourcrops"
+
+kernza_sens_1<- kernza_sens %>% 
+  filter(Practice == "Compost"|
+         Practice == "Alfalfa"|
+         Practice == "Tree"|
+         Practice == "Regen")
+kernza_sens_1$Practice[1:18]<- "Monocrop"
+kernza_sens_1$Practice[18:36]<- "Twocrops"
+kernza_sens_1$Practice[37:54]<- "Threecrops"
+kernza_sens_1$Practice[55:72]<- "Regenerative"
+
+sensativity<- bind_rows(cotton_sens, mango_sens, bison_sens_1, kernza_sens_1)
+
+
+
+
 ```
 
 
