@@ -16,6 +16,7 @@ crops<- read_csv("Total_Crops.csv")
 kernza_sens<- read_csv("kernza_updated.csv")
 bison_sens<- read_csv("bison_compiling_sensativity.csv")
 mango_sens<- read_csv("MANGO_sens.csv")
+sensativity<- read_csv("diversity_sensativity.csv")
 
 
 
@@ -399,7 +400,24 @@ kernza_scotland_table
 ###############################
 # Widget 3
 
-practices_yearly <- crops %>% 
+practices_yearly <- sensativity %>% 
+  filter(Practice == "Monocrop" |
+           Practice == "Twocrops" | 
+           Practice == "Threecrops" |
+           Practice == "Fourcrops"|
+           Practice == "Regenerative") %>% 
+  mutate(Practice = case_when(
+    Practice == "Monocrop" ~ 1,
+    Practice == "Twocrops" ~ 2,
+    Practice == "Threecrops" ~ 3,
+    Practice == "Fourcrops" ~ 4)) %>% 
+  select(Year, Crop, Country, Practice, dSOC, GWP) %>% 
+  arrange(Practice)
+
+practices_sum <- sensativity %>%  
+  group_by(Crop, Country, Practice) %>% 
+  summarise(mean_dSOC = mean(dSOC),
+            mean_GWP = mean(GWP))%>% 
   filter(Practice == "Monocrop" |
            Practice == "Twocrops" | 
            Practice == "Threecrops" |
@@ -409,14 +427,7 @@ practices_yearly <- crops %>%
     Practice == "Twocrops" ~ 2,
     Practice == "Threecrops" ~ 3,
     Practice == "Fourcrops" ~ 4)) %>% 
-  select(Year, Crop, Country, Practice, dSOC, GWP) %>% 
   arrange(Practice)
-
-
-practices_sum <- practices_yearly %>%  
-  group_by(Crop, Country, Practice) %>% 
-  summarise(sum_dSOC = sum(dSOC),
-            sum_GWP = sum(GWP))
   
 
 
@@ -512,19 +523,14 @@ ui<- dashboardPage(skin = "black",
               br(p("The 'Practices' tab highlights the effect of crop rotations/cover cropping on our results. The user can select the crop of interest, and adjust the slider to the desired number of cover crops to determine how this impacts SOC and GHG outcomes.", style = "font-family: 'verdana', font-si16pt")),
               selectInput("practices_crops",
                           "Choose a target crop",
-                          choices = c(unique(practices_yearly$Crop))),
-              selectInput("practices_location",
-                          "Choose a Location",
-                          choices = c(unique(practices_yearly$Country))),
+                          choices = c(unique(practices_sum$Crop))),
               sliderTextInput("practices_number", 
                           label = "Choose the number of crops grown on a single plot:", 
-                          choices = c(unique(practices_yearly$Practice)),
+                          choices = c(unique(practices_sum$Practice)),
                           grid = TRUE,
                           hide_min_max = TRUE)),
           box(plotOutput(outputId = "practice_sum_dSOC")),
-          box(plotOutput(outputId = "practice_sum_GWP")),
-          box(plotOutput(outputId = "practice_dSOC")),
-          box(plotOutput(outputId = "practice_GWP")))),
+          box(plotOutput(outputId = "practice_sum_GWP")))),
       
       tabItem(
         tabName = "ghg",
@@ -692,25 +698,15 @@ server<- function(input, output, session){
       theme_minimal()
   })
   
-observe({
-  updateSelectInput(session,
-                    "overview_location",
-                    choices = crops %>% 
-                      filter(Crop == input$overview_crops) %>% 
-                      select(Country) %>%
-                      unique() 
-    )
-  })  
+ 
   
   #########################
   # Widget 3
   #########################
 
   practice_df <- reactive({
-    practices_yearly %>% 
-      filter(Crop == input$practices_crops) %>% 
-      filter(Country == input$practices_location) %>% 
-      filter(Practice == input$practices_number)
+    practices_sum %>% 
+      filter(Crop == input$practices_crops)
   })
 
 cols <- reactive({
@@ -728,7 +724,7 @@ cols2 <- reactive({
 })
 
 output$practice_sum_dSOC <- renderPlot({
-  ggplot(data = practices_sum, aes(x = Practice, y = sum_dSOC, color = factor(Practice), fill = factor(Practice))) +
+  ggplot(data = practice_df(), aes(x = Practice, y = mean_dSOC, fill = factor(Practice))) +
     geom_col(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
     scale_colour_manual(values = cols(), aesthetics = c("colour", "fill"))+
     labs(title = "Total dSOC by number of crops", x = "Number of crops", y = "Total dSOC")+
@@ -736,7 +732,7 @@ output$practice_sum_dSOC <- renderPlot({
 })
 
 output$practice_sum_GWP <- renderPlot({
-  ggplot(data = practices_sum, aes(x = Practice, y = sum_GWP, color = factor(Practice), fill = factor(Practice))) +
+  ggplot(data = practice_df(), aes(x = Practice, y = mean_GWP, color = factor(Practice), fill = factor(Practice))) +
     geom_col(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
     scale_colour_manual(values = cols2(), aesthetics = c("colour", "fill"))+
     labs(title = "Total GWP by number of crops", x = "Number of crops", y = "Total GWP")+
@@ -760,7 +756,15 @@ output$practice_sum_GWP <- renderPlot({
       theme_minimal()
   })
 
-
+  observe({
+    updateSelectInput(session,
+                      "practices_number",
+                      choices = practices_sum %>% 
+                        filter(Practice == input$practices_number) %>%
+                        select(Practice) %>% 
+                        unique()
+    )
+  }) 
 
   #########################
   # Input for widget #4 GHG breakdown
