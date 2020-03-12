@@ -369,6 +369,7 @@ cotton_sens<- crops %>%
 
 
 mango_sens
+mango_sens$Crop<- "Mango"
 
 
 bison_sens_1<- bison_sens %>% 
@@ -380,6 +381,8 @@ bison_sens_1$crops_practices[1:20]<- "Monocrop"
 bison_sens_1$crops_practices[21:40]<- "Twocrops"
 bison_sens_1$crops_practices[41:60]<- "Threecrops"
 bison_sens_1$crops_practices[61:80]<- "Fourcrops"
+bison_sens$Crop<- "Bison"
+
 
 kernza_sens_1<- kernza_sens %>% 
   filter(Practice == "Compost"|
@@ -390,11 +393,44 @@ kernza_sens_1$Practice[1:18]<- "Monocrop"
 kernza_sens_1$Practice[18:36]<- "Twocrops"
 kernza_sens_1$Practice[37:54]<- "Threecrops"
 kernza_sens_1$Practice[55:72]<- "Regenerative"
-
-sensativity<- bind_rows(cotton_sens, mango_sens, bison_sens_1, kernza_sens_1)
-
+kernza_sens_1$Crop<- "Kernza"
 
 
+sensativity<- read_csv("diversity_sensativity.csv")
+
+practices_yearly <- sensativity %>% 
+  filter(Practice == "Monocrop" |
+           Practice == "Twocrops" | 
+           Practice == "Threecrops" |
+           Practice == "Fourcrops") %>% 
+  mutate(Practice = case_when(
+    Practice == "Monocrop" ~ 1,
+    Practice == "Twocrops" ~ 2,
+    Practice == "Threecrops" ~ 3,
+    Practice == "Fourcrops" ~ 4)) %>% 
+  select(Year, Crop, Country, Practice, dSOC, GWP) %>% 
+  arrange(Practice)
+
+
+practices_sum <- sensativity %>%  
+  group_by(Crop, Country, Practice) %>% 
+  summarise(mean_dSOC = mean(dSOC),
+            mean_GWP = mean(GWP))%>% 
+  filter(Practice == "Monocrop" |
+           Practice == "Twocrops" | 
+           Practice == "Threecrops" |
+           Practice == "Fourcrops") %>% 
+  mutate(Practice = case_when(
+    Practice == "Monocrop" ~ 1,
+    Practice == "Twocrops" ~ 2,
+    Practice == "Threecrops" ~ 3,
+    Practice == "Fourcrops" ~ 4)) %>% 
+  arrange(Practice)
+
+
+practice_sum_dSOC <-ggplot(data = practices_sum, aes(x = Practice, y = mean_dSOC, color = factor(Practice), fill = factor(Practice)))+
+  geom_col(position = "dodge", show.legend = "False", width = 0.5)
+practice_sum_dSOC
 
 ```
 
