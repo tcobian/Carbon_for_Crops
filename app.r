@@ -504,7 +504,7 @@ ui<- dashboardPage(skin = "black",
                               choices = c(unique(crops$Crop))),
                   selectInput("overview_location",
                               "Choose a Location",
-                              choices = c(unique(crops$Country))), 
+                              choices = c(unique(crops$Country))) 
                   ),
               box(plotOutput(outputId = "overview_plot1")),
               box(tableOutput(outputId = "overview_table")),
@@ -542,13 +542,8 @@ ui<- dashboardPage(skin = "black",
           box(plotOutput(outputId = "ghg_plot")),
           box(tableOutput(outputId = "ghg_table")))))))
   
-    
-  
+ 
 
-  
-
-  
-  
 
 server<- function(input, output, session){
   #####################################################################
