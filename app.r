@@ -640,7 +640,7 @@ server<- function(input, output, session){
                                                   fillColor = "orange", 
                                                   fillOpacity = 0.3) %>%
                                  addLegend(position = "topright", colors = c("red", "blue", "green", "orange"), labels = c("Cotton", "Grazing", "Mango", "Kernza")) %>% 
-                                 setView(40, 6, 2))  
+                                 setView(40, 6, 2))
   #####################################################################
   #####################################################################
   
