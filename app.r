@@ -476,8 +476,14 @@ ui<- dashboardPage(skin = "black",
             br(),
             box(h3(em("A study conducted by graduate students of the Bren School in collaboration with Patagonia, Inc.", align = "center")), height = 70, width = 100),
             br(),
-            img(src = "bren.png", height = 58, width = 171),
-            img(src = "patagonia.png", height = 58, width = 140)
+            box(p("Current agriculture practices comprise 30% of global greenhouse gas emissions, and contribute to accelerated soil erosion and decreased soil productivity. A new certification scheme, the Regenerative Organic Certification, has been created. This certification promotes regenerative organic agricultural practices - which theoretically sequester more carbon in the soil, mitigating climate change and improving soil health. These practices include cover cropping, crop rotations, and compost use, among others.", style = "font-family: 'verdana'; font-si16pt"), 
+                br(),
+                p("Patagonia, Inc. is interested in the potential of increased carbon sequestration in moving from organic to regenerative organic agriculture in the production of crops in their supply chain - namely, cotton, mangoes, kernza wheat, and perennial grasses for bison grazing. A team of graduate students at the Bren School assessed if regenerative organic practices actually stored more carbon in the soil compared to organic practices. Their results are summarized in this Shiny App.", style = "font-family: 'verdana'; font-si16pt")),
+            box(p(span("How to use the app:", style = "color:blue"), "The 'Regeneratives Globally' tab shows a map displaying locations where each crop is grown. Clicking on a pin provides a summary of soil organic carbon and GHG emissions results for Regenerative and Organic Practices for the crop in that location.", style = "font-family: 'verdana', font-si16pt")
+                ),
+            box(img(src = "bren.png", height = 58, width = 171), width = 3),
+            img(src = "patagonia.png", height = 70, width = 164)
+                
             
           )
       ),
@@ -488,12 +494,14 @@ ui<- dashboardPage(skin = "black",
         tabName = "overview",
             fluidRow(
               box(title = "Summary of Crop SOC and GHG Emissions",
+                  br(p("The 'Soil Organic Carbon & GWP' tab displays bar plots for mean SOC and GHG changes for each crop between regenerative and organic, as well as a summary table for these factors. The user can select the crop of interest and the location it is grown in.", style = "font-family: 'verdana', font-si16pt")),
                   selectInput("overview_crops",
                               "Choose a Crop",
                               choices = c(unique(crops$Crop))),
                   selectInput("overview_location",
                               "Choose a Location",
-                              choices = c(unique(crops$Country)))),
+                              choices = c(unique(crops$Country))), 
+                  ),
               box(plotOutput(outputId = "overview_plot1")),
               box(tableOutput(outputId = "overview_table")),
               box(plotOutput(outputId = "overview_plot2")))),
@@ -501,6 +509,7 @@ ui<- dashboardPage(skin = "black",
         tabName = "sensativity",
         fluidRow(
           box(title = "Impact of cropping methods on GHG emissions",
+              br(p("The 'Practices' tab highlights the effect of crop rotations/cover cropping on our results. The user can select the crop of interest, and adjust the slider to the desired number of cover crops to determine how this impacts SOC and GHG outcomes.", style = "font-family: 'verdana', font-si16pt")),
               selectInput("practices_crops",
                           "Choose a target crop",
                           choices = c(unique(practices_yearly$Crop))),
@@ -521,6 +530,7 @@ ui<- dashboardPage(skin = "black",
         tabName = "ghg",
         fluidRow(
           box(title = "Sources of GHG Emissions",
+              br(p("The 'Sources of GHGs' tab breaks down the sources of gases contributing to the overall GHG impacts of each crop. User can select the crop of interest, practice (regen or organic), and location. The app will then show you the sum of GHGs emitted from that crop/practice as well as the breakdown of GHGs emitted.", style = "font-family: 'verdana', font-si16pt")),
               selectInput("ghg_crops",
                           "Choose a Crop",
                           choices = c(unique(crops$Crop))),
@@ -657,7 +667,7 @@ server<- function(input, output, session){
       geom_hline(yintercept = 0)+
       scale_fill_manual(values = c("deepskyblue4", "deepskyblue"))+
       labs(x = "Practice", y = "Average SOC change (kgSOC/ha)", title = "Comparison of SOC change per hectare between Regenerative and Organic")+
-      theme_classic()
+      theme_minimal()
   })
   
   output$overview_table<- function(){
@@ -679,7 +689,7 @@ server<- function(input, output, session){
       geom_hline(yintercept = 0)+
       scale_fill_manual(values = c("darkorange4", "darkorange"))+
       labs(x = "Practice", y = "Average GHG Emissions (kgCO2e/ha)", title = "Comparison of Greenhouse Gas Emissions between Regenerative and Organic Practices")+
-      theme_classic()
+      theme_minimal()
   })
   
 observe({
