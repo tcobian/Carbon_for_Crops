@@ -400,33 +400,25 @@ kernza_scotland_table
 ###############################
 # Widget 3
 
-practices_yearly <- sensativity %>% 
-  filter(Practice == "Monocrop" |
-           Practice == "Twocrops" | 
-           Practice == "Threecrops" |
-           Practice == "Fourcrops"|
-           Practice == "Regenerative") %>% 
-  mutate(Practice = case_when(
-    Practice == "Monocrop" ~ 1,
-    Practice == "Twocrops" ~ 2,
-    Practice == "Threecrops" ~ 3,
-    Practice == "Fourcrops" ~ 4)) %>% 
-  select(Year, Crop, Country, Practice, dSOC, GWP) %>% 
-  arrange(Practice)
 
-practices_sum <- sensativity %>%  
+practices_mean <- sensativity %>%  
   group_by(Crop, Country, Practice) %>% 
   summarise(mean_dSOC = mean(dSOC),
             mean_GWP = mean(GWP))%>% 
   filter(Practice == "Monocrop" |
            Practice == "Twocrops" | 
            Practice == "Threecrops" |
-           Practice == "Fourcrops") %>% 
+           Practice == "Fourcrops" |
+           Practice == "Regenerative") %>% 
   mutate(Practice = case_when(
     Practice == "Monocrop" ~ 1,
     Practice == "Twocrops" ~ 2,
     Practice == "Threecrops" ~ 3,
-    Practice == "Fourcrops" ~ 4)) %>% 
+    Practice == "Fourcrops" ~ 4,
+    Crop == "Cotton" & Practice == "Regenerative" ~ 5,
+    Crop == "Bison" & Practice == "Regenerative" ~ 5,
+    Crop == "Kernza" & Practice == "Regenerative" ~ 4,
+    Crop == "Mango" & Practice == "Regenerative" ~ 3)) %>% 
   arrange(Practice)
   
 
@@ -473,9 +465,9 @@ ui<- dashboardPage(skin = "black",
     sidebarMenu(
       menuItem("Home", tabName = "home"),
       menuItem("Regeneratives Globally", tabName = "map"),
-      menuItem("Soil Organic Carbon & GWP", tabName = "overview"),
-      menuItem("Practices", tabName = "sensativity"),
-      menuItem("Sources of GHG's", tabName = "ghg")
+      menuItem("Regeneratives vs Organics", tabName = "overview"),
+      menuItem("Cover Cropping", tabName = "sensativity"),
+      menuItem("Breakdown of GHGs", tabName = "ghg")
   )),
   dashboardBody(
     tabItems(
@@ -487,10 +479,10 @@ ui<- dashboardPage(skin = "black",
             br(),
             box(h3(em("A study conducted by graduate students of the Bren School in collaboration with Patagonia, Inc.", align = "center")), height = 70, width = 100),
             br(),
-            box(p("Current agriculture practices comprise 30% of global greenhouse gas emissions, and contribute to accelerated soil erosion and decreased soil productivity. A new certification scheme, the Regenerative Organic Certification, has been created. This certification promotes regenerative organic agricultural practices - which theoretically sequester more carbon in the soil, mitigating climate change and improving soil health. These practices include cover cropping, crop rotations, and compost use, among others.", style = "font-family: 'verdana'; font-si16pt"), 
+            box(p("Current agriculture practices comprise 30% of global greenhouse gas emissions, and contribute to accelerated soil erosion and decreased soil productivity. A new certification scheme, the Regenerative Organic Certification, has been created. This certification promotes regenerative organic agricultural practices - which theoretically sequester more carbon in the soil, mitigating climate change and improving soil health. These practices include cover cropping, crop rotations, and compost use.", style = "font-family: 'verdana'; font-si16pt"), 
                 br(),
                 p("Patagonia, Inc. is interested in the potential of increased carbon sequestration in moving from organic to regenerative organic agriculture in the production of crops in their supply chain - namely, cotton, mangoes, kernza wheat, and perennial grasses for bison grazing. A team of graduate students at the Bren School assessed if regenerative organic practices actually stored more carbon in the soil compared to organic practices. Their results are summarized in this Shiny App.", style = "font-family: 'verdana'; font-si16pt")),
-            box(p(span("How to use the app:", style = "color:blue"), "The 'Regeneratives Globally' tab shows a map displaying locations where each crop is grown. Clicking on a pin provides a summary of soil organic carbon and GHG emissions results for Regenerative and Organic Practices for the crop in that location.", style = "font-family: 'verdana', font-si16pt")
+            box(p(span("How to use the app:", style = "color:blue"), "The 'Regeneratives Globally' tab shows a map displaying locations where each crop is grown. Clicking on a pin provides a summary of soil organic carbon (SOC) and greenhouse gas (GHG) emissions results for Regenerative and Organic Practices for the crop in that location. To explore more detailed trends, click on the other tabs.", style = "font-family: 'verdana', font-si16pt")
                 ),
             box(img(src = "bren.png", height = 58, width = 171), width = 3),
             img(src = "patagonia.png", height = 70, width = 164)
@@ -504,8 +496,8 @@ ui<- dashboardPage(skin = "black",
       tabItem(
         tabName = "overview",
             fluidRow(
-              box(title = "Summary of Crop SOC and GHG Emissions",
-                  br(p("The 'Soil Organic Carbon & GWP' tab displays bar plots for mean SOC and GHG changes for each crop between regenerative and organic, as well as a summary table for these factors. The user can select the crop of interest and the location it is grown in.", style = "font-family: 'verdana', font-si16pt")),
+              box(title = "Summary of SOC and GHG Emissions for Regeneratives vs. Organics",
+                  br(p("This tab displays the average changes in soil organic carbon (SOC) and greenhouse gas (GHG) emissions for each crop. By selecting the crop of interest and the location in which it is grown, the user can compare the impact of regenerative organic practices to organic practices.", style = "font-family: 'verdana', font-si16pt")),
                   selectInput("overview_crops",
                               "Choose a Crop",
                               choices = c(unique(crops$Crop))),
@@ -519,24 +511,24 @@ ui<- dashboardPage(skin = "black",
       tabItem( #####
         tabName = "sensativity",
         fluidRow(
-          box(title = "Impact of cropping methods on GHG emissions",
-              br(p("The 'Practices' tab highlights the effect of crop rotations/cover cropping on our results. The user can select the crop of interest, and adjust the slider to the desired number of cover crops to determine how this impacts SOC and GHG outcomes.", style = "font-family: 'verdana', font-si16pt")),
+          box(title = "Impact of Cover Cropping on SOC and GHG Emissions",
+              br(p("This tab highlights the effects of cover cropping on the average changes in soil organic carbon (SOC) and greenhouse gas (GHG) emissions. By selecting the crop of interest and the number of cover crops grown in a plot, the user can compare the impact of different cropping practices. Regenerative organic practices utilize higher degrees of cover cropping and are thus represented by the highest number available for each respective crop (i.e. Cotton grown with 5 crops is regenerative). ", style = "font-family: 'verdana', font-si16pt")),
               selectInput("practices_crops",
                           "Choose a target crop",
-                          choices = c(unique(practices_sum$Crop))),
+                          choices = c(unique(practices_mean$Crop))),
               sliderTextInput("practices_number", 
                           label = "Choose the number of crops grown on a single plot:", 
-                          choices = c(unique(practices_sum$Practice)),
+                          choices = c(unique(practices_mean$Practice)),
                           grid = TRUE,
                           hide_min_max = TRUE)),
-          box(plotOutput(outputId = "practice_sum_dSOC")),
-          box(plotOutput(outputId = "practice_sum_GWP")))),
+          box(plotOutput(outputId = "practice_mean_dSOC")),
+          box(plotOutput(outputId = "practice_mean_GWP")))),
       
       tabItem(
         tabName = "ghg",
         fluidRow(
-          box(title = "Sources of GHG Emissions",
-              br(p("The 'Sources of GHGs' tab breaks down the sources of gases contributing to the overall GHG impacts of each crop. User can select the crop of interest, practice (regen or organic), and location. The app will then show you the sum of GHGs emitted from that crop/practice as well as the breakdown of GHGs emitted.", style = "font-family: 'verdana', font-si16pt")),
+          box(title = "Breakdown of GHG Emissions by Gas",
+              br(p("This tab breaks down the types of gases that contribute to the overall greenhouse gas (GHG) impacts of each crop. By selecting the crop of interest, practice, and location, the user can compare the contributions of CH4, CO2, and N2O to overall GHG emissions.", style = "font-family: 'verdana', font-si16pt")),
               selectInput("ghg_crops",
                           "Choose a Crop",
                           choices = c(unique(crops$Crop))),
@@ -672,7 +664,7 @@ server<- function(input, output, session){
       geom_col(aes(fill = Practice), width = 0.5)+
       geom_hline(yintercept = 0)+
       scale_fill_manual(values = c("deepskyblue4", "deepskyblue"))+
-      labs(x = "Practice", y = "Average SOC change (kgSOC/ha)", title = "Comparison of SOC change per hectare between Regenerative and Organic")+
+      labs(x = "Practice", y = "Average change in SOC (kgSOC/ha)", title = "Comparison of SOC change per hectare between Regenerative and Organic")+
       theme_minimal()
   })
   
@@ -705,61 +697,46 @@ server<- function(input, output, session){
   #########################
 
   practice_df <- reactive({
-    practices_sum %>% 
+    practices_mean %>% 
       filter(Crop == input$practices_crops)
   })
 
 cols <- reactive({
   cols <- c("1" = "grey", "2" =  "grey", "3" =  "grey",
-            "4" =  "grey")
+            "4" =  "grey", "5" = "grey")
   cols[input$practices_number] <- "deepskyblue4"
   return(cols)
 })
 
 cols2 <- reactive({
   cols2 <- c("1" = "grey", "2" =  "grey", "3" =  "grey",
-            "4" =  "grey")
+            "4" =  "grey", "5" = "grey")
   cols2[input$practices_number] <- "darkolivegreen3"
   return(cols2)
 })
 
-output$practice_sum_dSOC <- renderPlot({
+output$practice_mean_dSOC <- renderPlot({
   ggplot(data = practice_df(), aes(x = Practice, y = mean_dSOC, fill = factor(Practice))) +
     geom_col(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
     scale_colour_manual(values = cols(), aesthetics = c("colour", "fill"))+
-    labs(title = "Total dSOC by number of crops", x = "Number of crops", y = "Total dSOC")+
+    labs(title = "Effect of cover cropping on average change in SOC", x = "Number of crops", y = "Average change in SOC (kgSOC/ha)")+
     theme_minimal()
 })
 
-output$practice_sum_GWP <- renderPlot({
+output$practice_mean_GWP <- renderPlot({
   ggplot(data = practice_df(), aes(x = Practice, y = mean_GWP, color = factor(Practice), fill = factor(Practice))) +
     geom_col(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
     scale_colour_manual(values = cols2(), aesthetics = c("colour", "fill"))+
-    labs(title = "Total GWP by number of crops", x = "Number of crops", y = "Total GWP")+
+    labs(title = "Effect of cover cropping on average change in GHG emissions", x = "Number of crops", y = "Average change in GHG emissions (kg CO2e)")+
     theme_minimal()
 })
 
 
-  output$practice_dSOC <- renderPlot({
-    ggplot(data = practice_df(), aes(x = Year, y = dSOC)) +
-      geom_col(stat = "identity", position = "dodge", show.legend = "False", width = 0.5, fill =
-                 "deepskyblue4")+
-      labs(title = "dSOC per year", x = "Year", y = "Total dSOC")+
-      theme_minimal()
-  })
-  
-  output$practice_GWP <- renderPlot({
-    ggplot(data = practice_df(), aes(x = Year, y = GWP)) +
-      geom_col(stat = "identity", position = "dodge", show.legend = "False", width = 0.5, fill =
-                 "darkolivegreen3")+
-      labs(title = "GWP per year", x = "Year", y = "Total GWP")+
-      theme_minimal()
-  })
 
   observe({
     updateSelectInput(session,
                       "practices_number",
-                      choices = practices_sum %>% 
+                      choices = practices_mean %>% 
                         filter(Practice == input$practices_number) %>%
                         select(Practice) %>% 
                         unique()

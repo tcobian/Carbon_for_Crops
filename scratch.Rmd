@@ -27,6 +27,15 @@ crops<- read_csv("Total_Crops.csv")
 ```
 
 
+```{r}
+crops<- read_csv("Total_Crops.csv")
+kernza_sens<- read_csv("kernza_updated.csv")
+bison_sens<- read_csv("bison_compiling_sensativity.csv")
+mango_sens<- read_csv("MANGO_sens.csv")
+sensativity<- read_csv("diversity_sensativity.csv")
+```
+
+
 
 Widget #1
 ```{r}
@@ -402,12 +411,17 @@ practices_yearly <- sensativity %>%
   filter(Practice == "Monocrop" |
            Practice == "Twocrops" | 
            Practice == "Threecrops" |
-           Practice == "Fourcrops") %>% 
+           Practice == "Fourcrops"|
+           Practice == "Regenerative") %>% 
   mutate(Practice = case_when(
     Practice == "Monocrop" ~ 1,
     Practice == "Twocrops" ~ 2,
     Practice == "Threecrops" ~ 3,
-    Practice == "Fourcrops" ~ 4)) %>% 
+    Practice == "Fourcrops" ~ 4,
+    Crop == "Cotton" & Practice == "Regenerative" ~ 5,
+    Crop == "Bison" & Practice == "Regenerative" ~ 5,
+    Crop == "Kernza" & Practice == "Regenerative" ~ 4,
+    Crop == "Mango" & Practice == "Regenerative" ~ 3)) %>% 
   select(Year, Crop, Country, Practice, dSOC, GWP) %>% 
   arrange(Practice)
 
