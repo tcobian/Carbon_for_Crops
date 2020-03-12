@@ -690,7 +690,15 @@ server<- function(input, output, session){
       theme_minimal()
   })
   
- 
+  observe({
+    updateSelectInput(session,
+                      "overview_location",
+                      choices = crops %>% 
+                        filter(Crop == input$overview_crops) %>% 
+                        select(Country) %>%
+                        unique() 
+    )
+  }) 
   
   #########################
   # Widget 3
