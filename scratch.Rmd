@@ -324,6 +324,64 @@ practices_yearly <- crops %>%
            Practice == "Threecrops" |
            Practice == "Fourcrops") %>% 
   select(Year, Crop, Country, Practice, dSOC, GWP)
+
+practice_df <- reactive({
+    practices_mean %>% 
+      filter(Crop == input$practices_crops)
+  })
+
+cols <- reactive({
+  cols <- c("1" = "grey", "2" =  "grey", "3" =  "grey",
+            "4" =  "grey", "5" = "grey")
+  cols[input$practices_number] <- "deepskyblue4"
+  return(cols)
+})
+
+label <- reactive({
+  practices_mean %>% 
+    filter(Crop == input$practices_crops) %>% 
+    filter(Practice == input$practices_number) 
+  
+})
+
+cols2 <- reactive({
+  cols2 <- c("1" = "grey", "2" =  "grey", "3" =  "grey",
+            "4" =  "grey", "5" = "grey")
+  cols2[input$practices_number] <- "darkolivegreen3" 
+  return(cols2)
+})
+
+output$practice_mean_dSOC <- renderPlot({
+  ggplot(data = practice_df(), aes(x = Practice, y = mean_dSOC, fill = factor(Practice))) +
+    geom_col(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
+    scale_colour_manual(values = cols(), aesthetics = c("colour", "fill"))+
+    labs(title = "Effect of cover cropping on average change in SOC", x = "Number of crops", y = "Average change in SOC (kgSOC/ha)")+
+    theme_minimal() + 
+    geom_text(data = label(), aes(label = round(mean_dSOC, digits = 0)), vjust = -1, position = position_dodge(width = 1), color = "deepskyblue4")
+})
+
+output$practice_mean_GWP <- renderPlot({
+  ggplot(data = practice_df(), aes(x = Practice, y = mean_GWP, color = factor(Practice), fill = factor(Practice))) +
+    geom_col(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
+    scale_colour_manual(values = cols2(), aesthetics = c("colour", "fill"))+
+    labs(title = "Effect of cover cropping on average change in GHG emissions", x = "Number of crops", y = "Average change in GHG emissions (kg CO2e)")+
+    theme_minimal() + 
+    geom_text_repel(data = label(), aes(label = round(mean_GWP, digits = 0)), color = "darkgreen", direction = "y", position = position_dodge(width = 1))
+})
+
+
+
+  observe({
+    updateSelectInput(session,
+                      "practices_number",
+                      choices = practices_mean %>% 
+                        filter(Practice == input$practices_number) %>%
+                        select(Practice) %>% 
+                        unique()
+    )
+  }) 
+
+
 ```
 
 
