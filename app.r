@@ -468,7 +468,8 @@ ui<- dashboardPage(skin = "black",
       menuItem("Regeneratives Globally", tabName = "map"),
       menuItem("Regeneratives vs Organics", tabName = "overview"),
       menuItem("Cover Cropping", tabName = "sensativity"),
-      menuItem("Breakdown of GHGs", tabName = "ghg")
+      menuItem("Breakdown of GHGs", tabName = "ghg"),
+      menuItem("Key Takeaways", tabName = "summary")
   )),
   dashboardBody(
     tabItems(
@@ -478,14 +479,27 @@ ui<- dashboardPage(skin = "black",
             setBackgroundImage(src = "land.jpeg", shinydashboard = TRUE),
             titlePanel(strong("Assessing the Soil & Climate Impacts of Regenerative Agriculture")),
             br(),
-            box(h3(em("A study conducted by graduate students of the Bren School in collaboration with Patagonia, Inc.", align = "center")), height = 70, width = 100),
             br(),
-            box(p("Current agriculture practices comprise 30% of global greenhouse gas emissions, and contribute to accelerated soil erosion and decreased soil productivity. A new certification scheme, the Regenerative Organic Certification, has been created. This certification promotes regenerative organic agricultural practices - which theoretically sequester more carbon in the soil, mitigating climate change and improving soil health. These practices include cover cropping, crop rotations, and compost use.", style = "font-family: 'verdana'; font-si16pt"), 
+            box(status = "info",
+              p("Current agriculture practices comprise 30% of global greenhouse gas emissions, and contribute to accelerated soil erosion and decreased soil productivity. A new certification scheme, the Regenerative Organic Certification, has been created. This certification promotes regenerative organic agricultural practices - which theoretically sequester more carbon in the soil, mitigating climate change and improving soil health. These practices include cover cropping, crop rotations, and compost use.", style = "font-family: 'verdana'; font-si16pt"), 
+                br(),
+                br(),
                 br(),
                 p("Patagonia, Inc. is interested in the potential of increased carbon sequestration in moving from organic to regenerative organic agriculture in the production of crops in their supply chain - namely, cotton, mangoes, kernza wheat, and perennial grasses for bison grazing. A team of graduate students at the Bren School assessed if regenerative organic practices actually stored more carbon in the soil compared to organic practices. Their results are summarized in this Shiny App.", style = "font-family: 'verdana'; font-si16pt")),
-            box(p(span("How to use the app:", style = "color:blue"), "The 'Regeneratives Globally' tab shows a map displaying locations where each crop is grown. Clicking on a pin provides a summary of soil organic carbon (SOC) and greenhouse gas (GHG) emissions results for Regenerative and Organic Practices for the crop in that location. To explore more detailed trends, click on the other tabs.", style = "font-family: 'verdana', font-si16pt")
+            box(status = "info",
+              p(span("How to use the app:", style = "color:blue"), "The 'Regeneratives Globally' tab shows a map displaying locations where each crop is grown. Clicking on a pin provides a summary of soil organic carbon (SOC) and greenhouse gas (GHG) emissions results for Regenerative and Organic Practices for the crop in that location. To explore more detailed trends, click on the other tabs.", style = "font-family: 'verdana', font-si16pt"),
+                br(),
+                p(span("Definitions:", style = "color:blue"),
+                  br(),
+                  strong("SOC"), "- Soil Organic Carbon, a measurement of organic carbon in the form of plant and other biomass in the soil. Globally, soil carbon is a carbon sink, and higher SOC corresponds to improved soil health and productivity.",
+                  br(),
+                  strong("Organic"), "- Organic practices required for the certification - no GMO use, and no synthetic inputs.",
+                  br(),
+                  strong("Regenerative Organic"), "- Additional practices required, such as cover cropping, crop rotations, rotational grazing, and compost use.",
+                  br(),
+                  strong("GHG"), "- Greenhouse gases that contribute to global warming that are emitted by agricultural soils. These include carbon dioxide, methane, and nitrous oxide.", style = "font-family: 'verdana', font-si16pt")
                 ),
-            box(img(src = "bren.png", height = 58, width = 171), width = 3),
+            box(solidHeader = TRUE, img(src = "bren.png", height = 58, width = 171), width = 3),
             img(src = "patagonia.png", height = 70, width = 164)
                 
             
@@ -497,7 +511,8 @@ ui<- dashboardPage(skin = "black",
       tabItem(
         tabName = "overview",
             fluidRow(
-              box(title = "Summary of SOC and GHG Emissions for Regeneratives vs. Organics",
+              box(title = "Summary of SOC and GHG Emissions for Regeneratives vs. Organics", status = "info",
+                  solidHeader = TRUE,
                   br(p("This tab displays the average changes in soil organic carbon (SOC) and greenhouse gas (GHG) emissions for each crop. By selecting the crop of interest and the location in which it is grown, the user can compare the impact of regenerative organic practices to organic practices.", style = "font-family: 'verdana', font-si16pt")),
                   selectInput("overview_crops",
                               "Choose a Crop",
@@ -506,13 +521,13 @@ ui<- dashboardPage(skin = "black",
                               "Choose a Location",
                               choices = c(unique(crops$Country))) 
                   ),
-              box(plotOutput(outputId = "overview_plot1")),
-              box(tableOutput(outputId = "overview_table")),
-              box(plotOutput(outputId = "overview_plot2")))),
+              box(status = "info", plotOutput(outputId = "overview_plot1")),
+              box(status = "info", tableOutput(outputId = "overview_table")),
+              box(status = "info", plotOutput(outputId = "overview_plot2")))),
       tabItem( #####
         tabName = "sensativity",
         fluidRow(
-          box(title = "Impact of Cover Cropping on SOC and GHG Emissions",
+          box(title = "Impact of Cover Cropping on SOC and GHG Emissions", status = "success", solidHeader = TRUE,
               br(p("This tab highlights the effects of cover cropping on the average changes in soil organic carbon (SOC) and greenhouse gas (GHG) emissions. By selecting the crop of interest and the number of cover crops grown in a plot, the user can compare the impact of different cropping practices. Regenerative organic practices utilize higher degrees of cover cropping and are thus represented by the highest number available for each respective crop (i.e. Cotton grown with 5 crops is regenerative). ", style = "font-family: 'verdana', font-si16pt")),
               selectInput("practices_crops",
                           "Choose a target crop",
@@ -522,13 +537,13 @@ ui<- dashboardPage(skin = "black",
                           choices = c(unique(practices_mean$Practice)),
                           grid = TRUE,
                           hide_min_max = TRUE)),
-          box(plotOutput(outputId = "practice_mean_dSOC")),
-          box(plotOutput(outputId = "practice_mean_GWP")))),
+          box(status = "success", plotOutput(outputId = "practice_mean_dSOC")),
+          box(status = "success", plotOutput(outputId = "practice_mean_GWP")))),
       
       tabItem(
         tabName = "ghg",
         fluidRow(
-          box(title = "Breakdown of GHG Emissions by Gas",
+          box(title = "Breakdown of GHG Emissions by Gas", status = "danger", solidHeader = TRUE,
               br(p("This tab breaks down the types of gases that contribute to the overall greenhouse gas (GHG) impacts of each crop. By selecting the crop of interest, practice, and location, the user can compare the contributions of CH4, CO2, and N2O to overall GHG emissions.", style = "font-family: 'verdana', font-si16pt")),
               selectInput("ghg_crops",
                           "Choose a Crop",
@@ -539,8 +554,26 @@ ui<- dashboardPage(skin = "black",
               selectInput("ghg_location",
                           "Choose a Location",
                           choices = c(crops$Country))),
-          box(plotOutput(outputId = "ghg_plot")),
-          box(tableOutput(outputId = "ghg_table")))))))
+          box(status = "danger", plotOutput(outputId = "ghg_plot")),
+          box(status = "danger", tableOutput(outputId = "ghg_table")))),
+      tabItem(
+        tabName = "summary",
+        fluidPage(
+          titlePanel(strong("Key Takeaways - Main Findings")),
+          br(),
+          br(),
+          box(status = "info",
+            p("Across the board, regenerative organic practices", em("were successful in building soil organic carbon."), "The magnitude of SOC increase was highly dependent on location, crop, climate, and existing soil properties.", style = "font-family: 'verdana', font-si16pt"),
+              br(),
+              p("However, regenerative organic practices", em("did not necessarily correspond to a decrease in Net GHG emissions"), ", as factors like the emissions of nitrous oxide (a far more potent GHG than carbon dioxide) from compost use sometimes outweighed the carbon sequestration benefit.", style = "font-family: 'verdana', font-si16pt"),
+              br(),
+              p(em("Perennial crops"), "like mango trees, Kernza wheat, and perennial grasslands, were more likely to act as a net sink of carbon. Meanwhile,", em("annual crops"), "like cotton were more likely to be a source of carbon. However, in this case regenerative practices managed to slow the loss of carbon from the soil to the atmosphere.", style = "font-family: 'verdana', font-si16pt")
+              )
+          )
+        )
+    )
+  )
+)
   
  
 
