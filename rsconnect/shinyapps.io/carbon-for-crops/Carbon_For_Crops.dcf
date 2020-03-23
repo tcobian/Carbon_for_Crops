@@ -1,0 +1,12 @@
+name: Carbon_For_Crops
+title: Carbon_For_Crops
+username:
+account: carbon-for-crops
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1983239
+bundleId: 2914317
+url: https://carbon-for-crops.shinyapps.io/Carbon_For_Crops/
+when: 1584990199.5453
+asMultiple: FALSE
+asStatic: FALSE
