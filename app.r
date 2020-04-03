@@ -8,6 +8,7 @@ library(sf)
 library(leaflet)
 library(shinyWidgets)
 library(ggrepel)
+library(scales)
 
 
 #######
@@ -799,6 +800,7 @@ server<- function(input, output, session){
       geom_hline(yintercept = 0)+
       scale_fill_manual(values = c("deepskyblue4", "deepskyblue"))+
       labs(x = "Practice", y = "Average change in SOC (kgSOC/ha)", title = "Comparison of SOC change per hectare between Regenerative and Organic")+
+      scale_y_continuous(label = comma)+
       theme_minimal()
   })
   
@@ -811,7 +813,7 @@ server<- function(input, output, session){
       filter(Country == input$overview_location) %>%
       filter(Practice == "Regenerative" |
                Practice == "Organic") %>% 
-      kable("html", col.names = c("Crop", "Practice", "Location", "Average SOC Change (kgSOC/ha)", "Average GHG Emissions (kg CO2e)")) %>% 
+      kable("html", col.names = c("Crop", "Practice", "Location", "Average SOC Change (kgSOC/ha)", "Average GHG Emissions (kg CO2e)"), format.args = list(big.mark = ",")) %>% 
       kable_styling(bootstrap_options = c("striped", "hover"))
   }
   
@@ -821,6 +823,7 @@ server<- function(input, output, session){
       geom_hline(yintercept = 0)+
       scale_fill_manual(values = c("darkorange4", "darkorange"))+
       labs(x = "Practice", y = "Average GHG Emissions (kgCO2e/ha)", title = "Comparison of Greenhouse Gas Emissions between Regenerative and Organic Practices")+
+      scale_y_continuous(labels = comma)+
       theme_minimal()
   })
   
@@ -869,6 +872,7 @@ server<- function(input, output, session){
       geom_col(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
       scale_colour_manual(values = cols(), aesthetics = c("colour", "fill"))+
       labs(title = "Effect of cover cropping on average change in SOC", x = "Number of crops", y = "Average change in SOC (kgSOC/ha)")+
+      scale_y_continuous(labels = comma)+
       theme_minimal() + 
       geom_text(data = label(), aes(label = round(mean_dSOC, digits = 0)), vjust = -1, position = position_dodge(width = 1), color = "deepskyblue4")
   })
@@ -878,6 +882,7 @@ server<- function(input, output, session){
       geom_col(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
       scale_colour_manual(values = cols2(), aesthetics = c("colour", "fill"))+
       labs(title = "Effect of cover cropping on average change in GHG emissions", x = "Number of crops", y = "Average change in GHG emissions (kg CO2e)")+
+      scale_y_continuous(labels = comma)+
       theme_minimal() + 
       geom_text_repel(data = label(), aes(label = round(mean_GWP, digits = 0)), color = "darkgreen", direction = "y", position = position_dodge(width = 1))
   })
@@ -909,6 +914,7 @@ output$ghg_plot<- renderPlot({
     geom_bar(stat = "identity", position = "dodge", show.legend = "False", width = 0.5)+
     scale_fill_manual(values = c("darkolivegreen", "darkolivegreen3", "darkolivegreen1"))+
     labs(title = "Average Yearly GHG Emissions", x = "Emissions from Each Gas")+
+    scale_y_continuous(labels = comma)+
     theme_minimal()
 })
 
@@ -921,7 +927,7 @@ output$ghg_table<- function(){
   ghg_total %>% 
     filter(Crop == input$ghg_crops) %>% 
     filter(Country == input$ghg_location) %>% 
-    kable("html", col.names = c("Crop", "Practice", "Location", "Yearly GHG Emissions (kgCO2e)")) %>% 
+    kable("html", col.names = c("Crop", "Practice", "Location", "Yearly GHG Emissions (kgCO2e)"),format.args = list(big.mark = ",")) %>% 
     kable_styling(bootstrap_options = c("striped", "hover"))
 }
   
