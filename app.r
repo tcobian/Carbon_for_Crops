@@ -147,6 +147,10 @@ cotton_regen_texas_table<- crops %>%
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
 
+cotton_regen_texas_table$clay<- 0.24
+cotton_regen_texas_table$bulk_density<- 1.4
+cotton_regen_texas_table$pH<- 5.8
+
 cotton_organic_texas_table<- crops %>% 
   filter(Crop == "Cotton") %>% 
   filter(Country == "Texas") %>%
@@ -154,11 +158,15 @@ cotton_organic_texas_table<- crops %>%
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
 
+cotton_organic_texas_table$clay<- 24
+cotton_organic_texas_table$bulk_density<- 1.4
+cotton_organic_texas_table$pH<- 5.8
+
 cotton_texas<- bind_rows(cotton_regen_texas_table, cotton_organic_texas_table)
-colnames(cotton_texas)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e")
+colnames(cotton_texas)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e", "Percent Clay", "Bulk Density(ton/cubic meter)", "Soil pH")
 rownames(cotton_texas)<- c("Regenerative ", "Organic")
 
-cotton_texas_table<- kable(cotton_texas, caption = "Cotton: Texas") %>% 
+cotton_texas_table<- kable(cotton_texas, caption = "Cotton: Texas", format.args = list(big.mark = ",")) %>% 
   kable_styling(bootstrap_options = "striped")
 cotton_texas_table
 
@@ -170,6 +178,10 @@ cotton_regen_india_table<- crops %>%
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
 
+cotton_regen_india_table$clay<- 49
+cotton_regen_india_table$bulk_density<- 1.59
+cotton_regen_india_table$pH<- 7.3
+
 cotton_organic_india_table<- crops %>% 
   filter(Crop == "Cotton") %>% 
   filter(Country == "India") %>%
@@ -177,11 +189,15 @@ cotton_organic_india_table<- crops %>%
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
 
+cotton_organic_india_table$clay<- 49
+cotton_organic_india_table$bulk_density<- 1.59
+cotton_organic_india_table$pH<- 7.3
+
 cotton_india<- bind_rows(cotton_regen_india_table, cotton_organic_india_table)
-colnames(cotton_india)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e")
+colnames(cotton_india)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e", "Percent Clay", "Bulk Density(ton/cubic meter)", "Soil pH")
 rownames(cotton_india)<- c("Regenerative ", "Organic")
 
-cotton_india_table<- kable(cotton_india, caption = "Cotton: India") %>% 
+cotton_india_table<- kable(cotton_india, caption = "Cotton: India", format.args = list(big.mark = ",")) %>% 
   kable_styling(bootstrap_options = "striped")
 cotton_india_table
 
@@ -193,6 +209,10 @@ cotton_regen_china_table<- crops %>%
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
 
+cotton_regen_china_table$clay<- 24
+cotton_regen_china_table$bulk_density<- 1.4
+cotton_regen_china_table$pH<- 6.5
+
 cotton_organic_china_table<- crops %>% 
   filter(Crop == "Cotton") %>% 
   filter(Country == "China") %>%
@@ -200,11 +220,15 @@ cotton_organic_china_table<- crops %>%
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
 
+cotton_organic_china_table$clay<- 24
+cotton_organic_china_table$bulk_density<- 1.4
+cotton_organic_china_table$pH<- 6.5
+
 cotton_china<- bind_rows(cotton_regen_china_table, cotton_organic_china_table)
-colnames(cotton_china)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e")
+colnames(cotton_china)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e", "Percent Clay", "Bulk Density(ton/cubic meter)", "Soil pH")
 rownames(cotton_china)<- c("Regenerative ", "Organic")
 
-cotton_china_table<- kable(cotton_china, caption = "Cotton: China") %>% 
+cotton_china_table<- kable(cotton_china, caption = "Cotton: China", format.args = list(big.mark = ",")) %>% 
   kable_styling(bootstrap_options = "striped")
 cotton_china_table
 
@@ -216,6 +240,10 @@ cotton_regen_peru_table<- crops %>%
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
 
+cotton_regen_peru_table$clay<- 14
+cotton_regen_peru_table$bulk_density<- 1.6
+cotton_regen_peru_table$pH<- 8.2
+
 cotton_organic_peru_table<- crops %>% 
   filter(Crop == "Cotton") %>% 
   filter(Country == "Peru") %>%
@@ -223,23 +251,33 @@ cotton_organic_peru_table<- crops %>%
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
 
+cotton_organic_peru_table$clay<- 14
+cotton_organic_peru_table$bulk_density<- 1.6
+cotton_organic_peru_table$pH<- 8.2
+
 cotton_peru<- bind_rows(cotton_regen_peru_table, cotton_organic_peru_table)
-colnames(cotton_peru)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e")
+colnames(cotton_peru)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e", "Percent Clay", "Bulk Density(ton/cubic meter)", "Soil pH")
 rownames(cotton_peru)<- c("Regenerative ", "Organic")
 
-cotton_peru_table<- kable(cotton_peru, caption = "Cotton: Peru") %>% 
+cotton_peru_table<- kable(cotton_peru, caption = "Cotton: Peru", format.args = list(big.mark = ",")) %>% 
   kable_styling(bootstrap_options = "striped")
 cotton_peru_table
 
 
 ########
 # grazing
+
+# SD
 grazing_regen_sd_table<- crops %>% 
   filter(Crop == "Bison") %>% 
   filter(Country == "South Dakota") %>%
   filter(Practice == "Regenerative") %>% 
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
+
+grazing_regen_sd_table$clay<- 19
+grazing_regen_sd_table$bulk_density<- 1.3
+grazing_regen_sd_table$pH<- 7.7
 
 grazing_organic_sd_table<- crops %>% 
   filter(Crop == "Bison") %>% 
@@ -248,21 +286,29 @@ grazing_organic_sd_table<- crops %>%
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
 
+grazing_organic_sd_table$clay<- 19
+grazing_organic_sd_table$bulk_density<- 1.3
+grazing_organic_sd_table$pH<- 7.7
+
 grazing_sd<- bind_rows(grazing_regen_sd_table, grazing_organic_sd_table)
-colnames(grazing_sd)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e")
+colnames(grazing_sd)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e", "Percent Clay", "Bulk Density(ton/cubic meter)", "Soil pH")
 rownames(grazing_sd)<- c("Regenerative ", "Organic")
 
-grazing_sd_table<- kable(grazing_sd, caption = "Grazing: South Dakota") %>% 
+grazing_sd_table<- kable(grazing_sd, caption = "Grazing: South Dakota", format.args = list(big.mark = ",")) %>% 
   kable_styling(bootstrap_options = "striped")
 grazing_sd_table
 
-
+#BZ
 grazing_regen_bz_table<- crops %>% 
   filter(Crop == "Bison") %>% 
   filter(Country == "Brazil") %>%
   filter(Practice == "Regenerative") %>% 
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
+
+grazing_regen_bz_table$clay<- 19
+grazing_regen_bz_table$bulk_density<- 1.59
+grazing_regen_bz_table$pH<- 4.6
 
 grazing_organic_bz_table<- crops %>% 
   filter(Crop == "Bison") %>% 
@@ -271,22 +317,32 @@ grazing_organic_bz_table<- crops %>%
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
 
+grazing_organic_bz_table$clay<- 19
+grazing_organic_bz_table$bulk_density<- 1.59
+grazing_organic_bz_table$pH<- 4.6
+
 grazing_bz<- bind_rows(grazing_regen_bz_table, grazing_organic_bz_table)
-colnames(grazing_bz)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e")
+colnames(grazing_bz)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e", "Percent Clay", "Bulk Density(ton/cubic meter)", "Soil pH")
 rownames(grazing_bz)<- c("Regenerative ", "Organic")
 
-grazing_bz_table<- kable(grazing_bz, caption = "Grazing: Brazil") %>% 
+grazing_bz_table<- kable(grazing_bz, caption = "Grazing: Brazil", format.args = list(big.mark = ",")) %>% 
   kable_styling(bootstrap_options = "striped")
 grazing_bz_table
 
 ##############
 # Mangos
+
+#Nicaragua
 mango_regen_nic_table<- crops %>% 
   filter(Crop == "Mango") %>% 
   filter(Country == "Nicaragua") %>%
   filter(Practice == "Regenerative") %>% 
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
+
+mango_regen_nic_table$clay<- 33
+mango_regen_nic_table$bulk_density<- 1.19
+mango_regen_nic_table$pH<- 6.4
 
 mango_organic_nic_table<- crops %>% 
   filter(Crop == "Mango") %>% 
@@ -295,21 +351,29 @@ mango_organic_nic_table<- crops %>%
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
 
+mango_organic_nic_table$clay<- 33
+mango_organic_nic_table$bulk_density<- 1.19
+mango_organic_nic_table$pH<- 6.4
+
 mango_nic<- bind_rows(mango_regen_nic_table, mango_organic_nic_table)
-colnames(mango_nic)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e")
+colnames(mango_nic)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e", "Percent Clay", "Bulk Density(ton/cubic meter)", "Soil pH")
 rownames(mango_nic)<- c("Regenerative ", "Organic")
 
 mango_nic_table<- kable(mango_nic, caption = "Mangos: Nicaragua") %>% 
   kable_styling(bootstrap_options = "striped")
 mango_nic_table
 
-
+#India
 mango_regen_india_table<- crops %>% 
   filter(Crop == "Mango") %>% 
   filter(Country == "India") %>%
   filter(Practice == "Regenerative") %>% 
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
+
+mango_regen_india_table$clay<- 40
+mango_regen_india_table$bulk_density<- 1.4
+mango_regen_india_table$pH<- 5.4
 
 mango_organic_india_table<- crops %>% 
   filter(Crop == "Mango") %>% 
@@ -318,11 +382,15 @@ mango_organic_india_table<- crops %>%
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
 
+mango_organic_india_table$clay<- 40
+mango_organic_india_table$bulk_density<- 1.4
+mango_organic_india_table$pH<- 5.4
+
 mango_india<- bind_rows(mango_regen_india_table, mango_organic_india_table)
-colnames(mango_india)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e")
+colnames(mango_india)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e", "Percent Clay", "Bulk Density(ton/cubic meter)", "Soil pH")
 rownames(mango_india)<- c("Regenerative ", "Organic")
 
-mango_india_table<- kable(mango_india, caption = "Mangos: India") %>% 
+mango_india_table<- kable(mango_india, caption = "Mangos: India", format.args = list(big.mark = ",")) %>% 
   kable_styling(bootstrap_options = "striped")
 mango_india_table
 
@@ -330,12 +398,18 @@ mango_india_table
 ######
 #Kernza
 ######
+
+#Minnesota
 kernza_regen_min_table<- crops %>% 
   filter(Crop == "Kernza") %>% 
   filter(Country == "Minnesota") %>%
   filter(Practice == "Regenerative") %>% 
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
+
+kernza_regen_min_table$clay<- 40
+kernza_regen_min_table$bulk_density<- 1.4
+kernza_regen_min_table$pH<- 6.5
 
 kernza_organic_min_table<- crops %>% 
   filter(Crop == "Kernza") %>% 
@@ -344,21 +418,29 @@ kernza_organic_min_table<- crops %>%
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
 
+kernza_organic_min_table$clay<- 40
+kernza_organic_min_table$bulk_density<- 1.4
+kernza_organic_min_table$pH<- 6.5
+
 kernza_min<- bind_rows(kernza_regen_min_table, kernza_organic_min_table)
-colnames(kernza_min)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e")
+colnames(kernza_min)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e", "Percent Clay", "Bulk Density(ton/cubic meter)", "Soil pH")
 rownames(kernza_min)<- c("Regenerative ", "Organic")
 
-kernza_min_table<- kable(kernza_min, caption = "Kernza: Minnesota") %>% 
+kernza_min_table<- kable(kernza_min, caption = "Kernza: Minnesota", format.args = list(big.mark = ",")) %>% 
   kable_styling(bootstrap_options = "striped")
 kernza_min_table
 
-
+#Kansas
 kernza_regen_ks_table<- crops %>% 
   filter(Crop == "Kernza") %>% 
   filter(Country == "Kansas") %>%
   filter(Practice == "Regenerative") %>% 
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
+
+kernza_regen_ks_table$clay<- 40
+kernza_regen_ks_table$bulk_density<- 1.4
+kernza_regen_ks_table$pH<- 6.5
 
 kernza_organic_ks_table<- crops %>% 
   filter(Crop == "Kernza") %>% 
@@ -367,21 +449,29 @@ kernza_organic_ks_table<- crops %>%
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
 
+kernza_organic_ks_table$clay<- 40
+kernza_organic_ks_table$bulk_density<- 1.4
+kernza_organic_ks_table$pH<- 6.5
+
 kernza_ks<- bind_rows(kernza_regen_ks_table, kernza_organic_ks_table)
-colnames(kernza_ks)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e")
+colnames(kernza_ks)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e", "Percent Clay", "Bulk Density(ton/cubic meter)", "Soil pH")
 rownames(kernza_ks)<- c("Regenerative ", "Organic")
 
-kernza_ks_table<- kable(kernza_ks, caption = "Kernza: Kansas") %>% 
+kernza_ks_table<- kable(kernza_ks, caption = "Kernza: Kansas", format.args = list(big.mark = ",")) %>% 
   kable_styling(bootstrap_options = "striped")
 kernza_ks_table
 
-
+# Scotland
 kernza_regen_scotland_table<- crops %>% 
   filter(Crop == "Kernza") %>% 
   filter(Country == "Scotland") %>%
   filter(Practice == "Regenerative") %>% 
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
+
+kernza_regen_scotland_table$clay<- 40
+kernza_regen_scotland_table$bulk_density<- 0.87
+kernza_regen_scotland_table$pH<- 6
 
 kernza_organic_scotland_table<- crops %>% 
   filter(Crop == "Kernza") %>% 
@@ -390,11 +480,15 @@ kernza_organic_scotland_table<- crops %>%
   summarise(mean_regen_soc = mean(dSOC),
             mean_regen_gwp = mean(GWP))
 
+kernza_organic_scotland_table$clay<- 40
+kernza_organic_scotland_table$bulk_density<- 0.87
+kernza_organic_scotland_table$pH<- 6
+
 kernza_scotland<- bind_rows(kernza_regen_scotland_table, kernza_organic_scotland_table)
-colnames(kernza_scotland)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e")
+colnames(kernza_scotland)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e", "Percent Clay", "Bulk Density(ton/cubic meter)", "Soil pH")
 rownames(kernza_scotland)<- c("Regenerative ", "Organic")
 
-kernza_scotland_table<- kable(kernza_scotland, caption = "Kernza: Scotland") %>% 
+kernza_scotland_table<- kable(kernza_scotland, caption = "Kernza: Scotland", format.args = list(big.mark = ",")) %>% 
   kable_styling(bootstrap_options = "striped")
 kernza_scotland_table
 
@@ -608,67 +702,78 @@ server<- function(input, output, session){
                                  addProviderTiles("CartoDB.DarkMatter") %>% 
                                  addCircleMarkers(lng = -95.300003, 
                                                   lat = 32.349998, 
-                                                  popup = cotton_texas_table, 
+                                                  popup = cotton_texas_table,
+                                                  popupOptions = popupOptions(maxWidth = 500),
                                                   stroke = FALSE, 
                                                   fillColor = "red", 
                                                   fillOpacity = 0.3) %>% 
                                  addCircleMarkers(lng = 78.6569, 
                                                   lat = 22.9734, 
-                                                  popup = cotton_india_table, 
+                                                  popup = cotton_india_table,
+                                                  popupOptions = popupOptions(maxWidth = 500),
                                                   stroke = FALSE, 
                                                   fillColor = "red", 
                                                   fillOpacity = 0.3) %>% 
                                  addCircleMarkers(lng = 87.5396, 
                                                   lat = 42.5246, 
-                                                  popup = cotton_china_table, 
+                                                  popup = cotton_china_table,
+                                                  popupOptions = popupOptions(maxWidth = 500),
                                                   stroke = FALSE, 
                                                   fillColor = "red", 
                                                   fillOpacity = 0.3) %>% 
                                  addCircleMarkers(lng = -80.6549, 
                                                   lat = -5.1783, 
-                                                  popup = cotton_peru_table, 
+                                                  popup = cotton_peru_table,
+                                                  popupOptions = popupOptions(maxWidth = 500),
                                                   stroke = FALSE, 
                                                   fillColor = "red", 
                                                   fillOpacity = 0.3) %>% 
                                  addCircleMarkers(lng = -103.2310, 
                                                   lat = 44.0805, 
-                                                  popup = grazing_sd_table, 
+                                                  popup = grazing_sd_table,
+                                                  popupOptions = popupOptions(maxWidth = 500),
                                                   stroke = FALSE, 
                                                   fillColor = "blue", 
                                                   fillOpacity = 0.3) %>%
                                  addCircleMarkers(lng = -56.9211, 
                                                   lat = -12.6819, 
-                                                  popup = grazing_bz_table, 
+                                                  popup = grazing_bz_table,
+                                                  popupOptions = popupOptions(maxWidth = 500),
                                                   stroke = FALSE, 
                                                   fillColor = "blue", 
                                                   fillOpacity = 0.3) %>%
                                  addCircleMarkers(lng = -85.2072, 
                                                   lat = 12.8654, 
-                                                  popup = mango_nic_table, 
+                                                  popup = mango_nic_table,
+                                                  popupOptions = popupOptions(maxWidth = 500),
                                                   stroke = FALSE, 
                                                   fillColor = "green", 
                                                   fillOpacity = 0.3) %>%
                                  addCircleMarkers(lng = 72.8777, 
                                                   lat = 19.0760, 
-                                                  popup = mango_india_table, 
+                                                  popup = mango_india_table,
+                                                  popupOptions = popupOptions(maxWidth = 500),
                                                   stroke = FALSE, 
                                                   fillColor = "green", 
                                                   fillOpacity = 0.3) %>%
                                  addCircleMarkers(lng = -94.6859, 
                                                   lat = 46.7296, 
-                                                  popup = kernza_min_table, 
+                                                  popup = kernza_min_table,
+                                                  popupOptions = popupOptions(maxWidth = 500),
                                                   stroke = FALSE, 
                                                   fillColor = "orange", 
                                                   fillOpacity = 0.3) %>%
                                  addCircleMarkers(lng = -98.4842, 
                                                   lat = 39.0119, 
-                                                  popup = kernza_ks_table, 
+                                                  popup = kernza_ks_table,
+                                                  popupOptions = popupOptions(maxWidth = 500),
                                                   stroke = FALSE, 
                                                   fillColor = "orange", 
                                                   fillOpacity = 0.3) %>%
                                  addCircleMarkers(lng = -4.5919, 
                                                   lat = 55.6765, 
-                                                  popup = kernza_scotland_table, 
+                                                  popup = kernza_scotland_table,
+                                                  popupOptions = popupOptions(maxWidth = 500),
                                                   stroke = FALSE, 
                                                   fillColor = "orange", 
                                                   fillOpacity = 0.3) %>%

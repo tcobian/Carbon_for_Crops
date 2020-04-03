@@ -507,6 +507,30 @@ practice_sum_dSOC
 ```
 
 
+```{r}
+cotton_regen_texas_table<- crops %>% 
+  filter(Crop == "Cotton") %>% 
+  filter(Country == "Texas") %>%
+  filter(Practice == "Regenerative") %>% 
+  summarise(mean_regen_soc = mean(dSOC),
+            mean_regen_gwp = mean(GWP))
+
+cotton_organic_texas_table<- crops %>% 
+  filter(Crop == "Cotton") %>% 
+  filter(Country == "Texas") %>%
+  filter(Practice == "Organic") %>% 
+  summarise(mean_regen_soc = mean(dSOC),
+            mean_regen_gwp = mean(GWP))
+
+cotton_texas<- bind_rows(cotton_regen_texas_table, cotton_organic_texas_table)
+colnames(cotton_texas)<- c("Yearly Change kgSOC", "Average Net GHG kgCO2e")
+rownames(cotton_texas)<- c("Regenerative ", "Organic")
+
+cotton_texas_table<- kable(cotton_texas, caption = "Cotton: Texas") %>% 
+  kable_styling(bootstrap_options = "striped")
+cotton_texas_table
+```
+
 
 
 
